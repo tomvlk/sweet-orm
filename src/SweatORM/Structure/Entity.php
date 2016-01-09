@@ -10,6 +10,7 @@ namespace SweatORM\Structure;
 
 
 use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
@@ -17,9 +18,6 @@ use Doctrine\Common\Annotations\Annotation;
  */
 class Entity extends Annotation
 {
-
-
-
     private static $instances = array();
 
     public static function getEntity($className)

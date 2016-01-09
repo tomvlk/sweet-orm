@@ -23,13 +23,13 @@
     "satooshi/php-coveralls": "0.7.*"
   },
   "autoload": {
-    "psr-0": {
-      "SweatORM": "src/"
+    "psr-4": {
+      "SweatORM\\": "src/SweatORM"
     }
   },
   "autoload-dev": {
-    "psr-0": {
-      "SweatORM\\Tests": "tests/src"
+    "psr-4": {
+      "SweatORM\\Tests\\": "tests/src"
     }
   },
   "archive": {
