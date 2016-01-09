@@ -9,7 +9,7 @@
 namespace SweatORM\Structure;
 
 
-use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Enum;
 
@@ -17,10 +17,10 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  * @Annotation
  * @Target("PROPERTY")
  */
-class Column extends Annotation
+class Column implements Annotation
 {
     /**
-     * @Required()
+     * @Required
      * @Enum({"string", "integer", "float", "double", "text"})
      * @var string
      */

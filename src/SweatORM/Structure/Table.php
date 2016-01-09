@@ -9,16 +9,17 @@
 namespace SweatORM\Structure;
 
 
-use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
+use Doctrine\Common\Annotations\Annotation\Required;
 
 /**
  * @Annotation
  * @Target("CLASS")
  */
-class Table extends Annotation
+class Table implements Annotation
 {
     /**
-     * @Annotation\Required()
+     * @Required
      * @var string
      */
     public $name;

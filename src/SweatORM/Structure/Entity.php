@@ -9,14 +9,14 @@
 namespace SweatORM\Structure;
 
 
-use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
 use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * @Annotation
  * @Target("CLASS")
  */
-class Entity extends Annotation
+class Entity implements Annotation
 {
     private static $instances = array();
 
