@@ -19,6 +19,10 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../src</directory>
+            <exclude>
+                <directory suffix=".php">../src/SweatORM/Exception</directory>
+                <file>../src/SweatORM/Structure/SweatAnnotations.php</file>
+            </exclude>
         </whitelist>
     </filter>
 

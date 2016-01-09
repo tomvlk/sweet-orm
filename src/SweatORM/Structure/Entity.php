@@ -20,6 +20,10 @@ class Entity extends Annotation
 {
     private static $instances = array();
 
+    /**
+     * @param $className
+     * @codeCoverageIgnore
+     */
     public static function getEntity($className)
     {
         $reflection = new \ReflectionClass($className);
