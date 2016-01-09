@@ -319,9 +319,9 @@ class Query
 
         // Fetch and return
         if ($multi) {
-            return $query->fetchAll();
+            return $this->injectState($query->fetchAll());
         }
-        return $query->fetch();
+        return $this->injectState($query->fetch());
     }
 
 
@@ -403,5 +403,27 @@ class Query
         if (! empty($this->limit)) {
             $this->query .= " LIMIT $this->limit";
         }
+    }
+
+    /**
+     * Inject save state on fetched entities and return
+     * @param Entity|Entity[] $result
+     * @return Entity|Entity{}
+     */
+    private function injectState($result)
+    {
+        if (! is_array($result)) {
+            if ($result instanceof Entity) {
+                $result->_saved = true;
+            }
+            return $result;
+        }
+
+        foreach ($result as $entity) {
+            if ($entity instanceof Entity) {
+                $entity->_saved = true;
+            }
+        }
+        return $result;
     }
 }
