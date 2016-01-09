@@ -10,6 +10,7 @@ namespace SweatORM\Database;
 use SweatORM\ConnectionManager;
 use SweatORM\Entity;
 use SweatORM\EntityManager;
+use SweatORM\Exception\ORMException;
 use SweatORM\Exception\QueryException;
 use SweatORM\Structure\EntityStructure;
 
@@ -71,13 +72,21 @@ class Query
     /**
      * Query Builder constructor
      * @param $entityClass
+     * @throws ORMException
      */
     public function __construct($entityClass)
     {
         $this->class = $entityClass;
         $this->structure = EntityManager::getInstance()->getEntityStructure($entityClass);
+        if ($this->structure === false) {
+            throw new QueryException("Could not construct Query Builder, entity not indexed correctly!");
+        }
 
         $this->generator = new QueryGenerator();
+
+        // Automaticly set select and from based on the structure of the Entity
+        $this->select("*");
+        $this->from($this->structure->tableName);
     }
 
 
@@ -241,7 +250,7 @@ class Query
             throw $this->exception;
         }
 
-        $this->fetch(true);
+        return $this->fetch(true);
     }
 
     /**
@@ -256,7 +265,7 @@ class Query
             throw $this->exception;
         }
 
-        $this->fetch(false);
+        return $this->fetch(false);
     }
 
 
@@ -294,6 +303,9 @@ class Query
 
         // Set fetch mode
         $query->setFetchMode(\PDO::FETCH_CLASS, $this->class);
+
+        // Execute
+        $query->execute();
 
         // Fetch and return
         if ($multi) {

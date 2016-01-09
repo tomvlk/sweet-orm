@@ -55,6 +55,14 @@ class EntityManager
         return isset($this->entities[$entityClassName]);
     }
 
+    /**
+     * Will clear all registered entities!
+     */
+    public function clearRegisteredEntities()
+    {
+        $this->entities = array();
+    }
+
 
     /**
      * Get entity structure class for using metadata
@@ -64,10 +72,10 @@ class EntityManager
      */
     public function getEntityStructure($entityClassName)
     {
-        if ($this->isRegistered($entityClassName)){
-            return $this->entities[$entityClassName];
+        if (! $this->isRegistered($entityClassName)) {
+            $this->registerEntity($entityClassName);
         }
-        return false;
+        return $this->entities[$entityClassName];
     }
 
 

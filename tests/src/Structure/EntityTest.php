@@ -56,6 +56,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     public function testRegisterEntity()
     {
         $manager = EntityManager::getInstance();
+        $manager->clearRegisteredEntities();
 
         $registered = $manager->isRegistered(Post::class);
         $this->assertFalse($registered);
@@ -66,11 +67,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $registered = $manager->isRegistered(Category::class);
         $this->assertTrue($registered);
-
-
-        $structure = $manager->getEntityStructure(Post::class);
-        $this->assertFalse($structure);
-
 
         $structure = $manager->getEntityStructure(Category::class);
         $this->assertInstanceOf("\\SweatORM\\Structure\\EntityStructure", $structure);

@@ -16,7 +16,7 @@ use SweatORM\Structure\Column;
  * Class Category
  * @package SweatORM\Tests\Models
  *
- * @\SweatORM\Structure\Entity()
+ * @\SweatORM\Structure\Entity
  * @Table(name="category")
  */
 class Category extends Entity

@@ -16,7 +16,7 @@ use SweatORM\Structure\Table;
  * Class Post
  * @package SweatORM\Tests\Models
  *
- * @\SweatORM\Structure\Entity()
+ * @\SweatORM\Structure\Entity
  * @Table(name="post")
  */
 class Post extends Entity
