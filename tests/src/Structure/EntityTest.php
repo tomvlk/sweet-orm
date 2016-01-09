@@ -25,6 +25,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \SweatORM\Structure\Indexer\EntityIndexer
      * @covers \SweatORM\Structure\Indexer\Indexer
      * @covers \SweatORM\Structure\Indexer\TableIndexer
+     * @covers \SweatORM\Structure\Indexer\ColumnIndexer
      * @covers \SweatORM\Structure\EntityStructure
      */
     public function testEntityAnnotation()

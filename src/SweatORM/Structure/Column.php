@@ -15,7 +15,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
 
 /**
  * @Annotation
- * @Target("CLASS")
+ * @Target("PROPERTY")
  */
 class Column extends Annotation
 {

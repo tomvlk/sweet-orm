@@ -22,7 +22,8 @@ class EntityIndexer
 {
     /** @var array Indexer class names */
     private static $indexers = array(
-        "TableIndexer"
+        "TableIndexer",
+        "ColumnIndexer"
     );
 
     /**

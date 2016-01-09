@@ -23,19 +23,19 @@ class Category extends Entity
 {
     /**
      * @var int
-     * @Column
+     * @Column(type="integer")
      */
     public $id;
 
     /**
      * @var string
-     * @Column
+     * @Column(type="string")
      */
     public $name;
 
     /**
      * @var string
-     * @Column
+     * @Column(type="string")
      */
     public $description;
 }

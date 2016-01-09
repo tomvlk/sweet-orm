@@ -23,31 +23,31 @@ class Post extends Entity
 {
     /**
      * @var int
-     * @Column
+     * @Column(type="integer")
      */
     public $id;
 
     /**
      * @var int
-     * @Column
+     * @Column(type="integer")
      */
     public $author;
 
     /**
      * @var int
-     * @Column
+     * @Column(type="integer")
      */
     public $category;
 
     /**
      * @var string
-     * @Column
+     * @Column(type="string")
      */
     public $title;
 
     /**
      * @var string
-     * @Column
+     * @Column(type="string")
      */
     public $content;
 }
