@@ -79,7 +79,7 @@ class Query
         $this->class = $entityClass;
         $this->structure = EntityManager::getInstance()->getEntityStructure($entityClass);
         if ($this->structure === false) {
-            throw new QueryException("Could not construct Query Builder, entity not indexed correctly!");
+            throw new QueryException("Could not construct Query Builder, entity not indexed correctly!"); // @codeCoverageIgnore
         }
 
         $this->generator = new QueryGenerator();
@@ -132,7 +132,7 @@ class Query
     public function where($criteria, $operator = null, $value = null)
     {
         // If the operator is the value, then we are going to use the = operator
-        if (! is_array($criteria) && $value === null && $this->validValue($operator, "=")) {
+        if (! is_array($criteria) && $value === null && $this->validValue($operator, "=") && func_num_args() === 2) {
             // Operator is now value!
             $criteria = array($criteria => array("=" => $operator));
         }
@@ -140,6 +140,12 @@ class Query
         // If it's the shorthand of the where, convert it to the normal criteria.
         if (! is_array($criteria) && $this->validOperator($operator) && $this->validValue($value, $operator)) {
             $criteria = array($criteria => array($operator => $value));
+        }
+
+        // No smart solution found!
+        if (! is_array($criteria)) {
+            $this->exception = new QueryException("The criteria in the where is invalid! Please look at the docs for the correct syntax!", 0, $this->exception);
+            return $this;
         }
 
         // Get column names of table
@@ -222,6 +228,10 @@ class Query
     {
         // First lets upper the type.
         $type = strtoupper($type);
+
+        if (! is_string($column)) {
+            $this->exception = new QueryException("Sorting column must be an string!", 0, $this->exception);
+        }
 
         if (! $this->validOrderType($type)) {
             $this->exception = new QueryException("Sorting requires a type that is either 'ASC' or 'DESC'!", 0, $this->exception);
@@ -337,7 +347,7 @@ class Query
      */
     private function validOperator($operator)
     {
-        $valid = array("=", "!=", "LIKE", ">", "<", ">=", "<=", "IN", "<>");
+        $valid = array("=", "!=", "LIKE", ">", "<", ">=", "<=", "IN", "<>", "IS NOT");
         return in_array($operator, $valid, true);
     }
 
@@ -350,12 +360,15 @@ class Query
     private function validValue($value, $operator)
     {
         if (! $this->validOperator($operator)) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         if ($operator === "IN") {
             // Valid should be an array!
             return is_array($value);
+        }
+        if ($operator === "IS NOT") {
+            return is_null($value);
         }
 
         return !is_array($value);

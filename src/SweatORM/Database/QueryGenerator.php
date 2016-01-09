@@ -94,7 +94,7 @@ class QueryGenerator
     {
         if (! empty($sortBy)) {
             if (empty($sortOrder)) {
-                $sortOrder = "ASC";
+                $sortOrder = "ASC"; // @codeCoverageIgnore
             }
 
             $order = "$sortBy $sortOrder";
