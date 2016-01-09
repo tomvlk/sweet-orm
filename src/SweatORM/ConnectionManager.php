@@ -76,6 +76,8 @@ class ConnectionManager
         $password = null;
 
         if ($driver === 'pdo_sqlite') {
+            // We will ignore this for now, as it's not tested with SQLite yet!
+            // @codeCoverageIgnoreStart
             $path = Configuration::get('database_path');
 
             if (! $path || ! file_exists($path)) {
@@ -83,6 +85,7 @@ class ConnectionManager
             }
 
             $dsn = "sqlite:" . $path;
+            // @codeCoverageIgnoreEnd
         }else if ($driver === 'pdo_mysql') {
             $host = Configuration::get('database_host');
             $database = Configuration::get('database_db');
