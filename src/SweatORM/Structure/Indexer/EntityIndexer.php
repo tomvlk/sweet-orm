@@ -88,5 +88,13 @@ class EntityIndexer
         }
     }
 
-
+    /**
+     * Get entity structure instance, indexed entity.
+     *
+     * @return EntityStructure
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
 }
