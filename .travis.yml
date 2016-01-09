@@ -25,6 +25,7 @@ script:
 
 after_success:
   - travis_retry php vendor/bin/coveralls -v
+  - travis_retry php vendor/bin/codacycoverage clover build/logs/clover.xml
 
 cache:
   directories:

@@ -93,9 +93,9 @@ class QueryGenerator
     public function generateOrder($sortBy, $sortOrder, &$order)
     {
         if (! empty($sortBy)) {
-            if (empty($sortOrder)) {
+            if (empty($sortOrder)) { // @codeCoverageIgnore
                 $sortOrder = "ASC"; // @codeCoverageIgnore
-            }
+            } // @codeCoverageIgnore
 
             $order = "$sortBy $sortOrder";
         }
