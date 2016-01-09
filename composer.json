@@ -24,12 +24,12 @@
   },
   "autoload": {
     "psr-0": {
-      "SweatORM\\": "src/"
+      "SweatORM": "src/"
     }
   },
   "autoload-dev": {
     "psr-0": {
-      "SweatORM\\Tests\\": "tests/SweatORM/Tests"
+      "SweatORM\\Tests": "tests/src"
     }
   },
   "archive": {

@@ -12,7 +12,7 @@
 
     <testsuites>
         <testsuite name="Sweat ORM Tests">
-            <directory>./SweatORM/Tests</directory>
+            <directory>./src</directory>
         </testsuite>
     </testsuites>
 
