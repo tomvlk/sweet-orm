@@ -9,6 +9,7 @@
 namespace SweatORM;
 
 
+use SweatORM\Database\Query;
 use SweatORM\Structure\EntityStructure;
 use SweatORM\Structure\Indexer\EntityIndexer;
 
@@ -67,5 +68,29 @@ class EntityManager
             return $this->entities[$entityClassName];
         }
         return false;
+    }
+
+
+
+
+
+    /** ==== Entity Operation Functions, will apply on specific entities ==== **/
+
+
+    /**
+     * Start a query
+     *
+     * @param $entity
+     * @return Query
+     */
+    public static function find($entity)
+    {
+        return new Query($entity);
+    }
+
+
+    public static function get($primaryValue)
+    {
+        // TODO Implement get, will do a where on the primary key.
     }
 }

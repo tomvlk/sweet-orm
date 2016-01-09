@@ -62,4 +62,18 @@ abstract class Entity
             EntityManager::getInstance()->registerEntity(static::class);
         }
     }
+
+
+
+
+    /** ==== Entity Operation Functions, will apply on specific entities ==== **/
+
+
+    /**
+     * Start Query for finding specific Entities.
+     */
+    public static function find()
+    {
+        return EntityManager::getInstance()->find(static::class);
+    }
 }
