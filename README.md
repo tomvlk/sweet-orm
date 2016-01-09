@@ -1,2 +1,2 @@
-# sweat-orm
+# SweatORM [![Build Status](https://travis-ci.org/tomvlk/sweat-orm.svg)](https://travis-ci.org/tomvlk/sweat-orm) [![Coverage Status](https://coveralls.io/repos/tomvlk/sweat-orm/badge.svg?branch=master&service=github)](https://coveralls.io/github/tomvlk/sweat-orm?branch=master) 
 Simple and sweat PHP orm, without having to use command line generators and migrators, can work on your existing table structure.
