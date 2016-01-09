@@ -43,4 +43,15 @@ abstract class Entity
     {
         return EntityManager::getInstance()->find(static::class);
     }
+
+    /**
+     * Get Entity with Primary Key value
+     *
+     * @param int|string $primaryValue
+     * @return Entity|false
+     */
+    public static function get($primaryValue)
+    {
+        return EntityManager::getInstance()->get(static::class, $primaryValue);
+    }
 }

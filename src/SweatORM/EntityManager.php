@@ -96,9 +96,19 @@ class EntityManager
         return new Query($entity);
     }
 
-
-    public static function get($primaryValue)
+    /**
+     * Get Entity with Primary Key value
+     *
+     * @param string $entity
+     * @param int|string $primaryValue
+     * @return false|Entity
+     * @throws \Exception
+     */
+    public static function get($entity, $primaryValue)
     {
-        // TODO Implement get, will do a where on the primary key.
+        $query = new Query($entity);
+        $column = self::getInstance()->getEntityStructure($entity)->primaryColumn;
+        $query->where($column->name, $primaryValue);
+        return $query->one();
     }
 }
