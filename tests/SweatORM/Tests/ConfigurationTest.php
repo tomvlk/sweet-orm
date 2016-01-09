@@ -66,5 +66,8 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase
         Config::add('test_key_add_2', array('on' => true));
 
         $this->assertEquals(array(true,true,array('on'=>true)), Config::get('test_key_add_2'));
+
+        $result = Config::add('test_nonexisting_key', true);
+        $this->assertFalse($result);
     }
 }
