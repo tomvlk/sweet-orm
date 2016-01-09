@@ -23,7 +23,7 @@ class Post extends Entity
 {
     /**
      * @var int
-     * @Column(type="integer")
+     * @Column(type="integer", primary=true)
      */
     public $id;
 

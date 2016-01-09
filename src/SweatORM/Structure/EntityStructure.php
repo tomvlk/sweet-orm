@@ -50,4 +50,10 @@ class EntityStructure
      * @var string[]
      */
     public $columnNames = array();
+
+    /**
+     * Read Only! Column that is primary key.
+     * @var Column
+     */
+    public $primaryColumn;
 }

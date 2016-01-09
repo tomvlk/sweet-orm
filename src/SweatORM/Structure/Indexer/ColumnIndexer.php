@@ -68,7 +68,16 @@ class ColumnIndexer implements Indexer
 
                 $structure->columnNames[] = $column->name;
                 $structure->columns[] = $column;
+
+                if ($column->primary) {
+                    $structure->primaryColumn = $column;
+                }
             }
+        }
+
+        // If no primary key is given we will throw an exception
+        if ($structure->primaryColumn == null) {
+            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' has no primary key column defined!"); // @codeCoverageIgnore
         }
     }
 }
