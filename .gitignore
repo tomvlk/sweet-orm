@@ -1,0 +1,12 @@
+### Composer
+composer.phar
+composer.lock
+vendor/
+
+### IDE
+## JetBrains products
+*.iml
+.idea/
+*.ipr
+*.iws
+/out/
