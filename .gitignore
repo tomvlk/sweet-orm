@@ -3,6 +3,9 @@ composer.phar
 composer.lock
 vendor/
 
+### Tests
+build
+
 ### IDE
 ## JetBrains products
 *.iml
