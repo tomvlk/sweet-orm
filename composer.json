@@ -29,7 +29,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "SweatORM\\Tests\\": "tests/src"
+      "SweatORM\\Tests\\": "tests/src",
+      "SweatORM\\Tests\\Models\\": "tests/models"
     }
   },
   "archive": {
