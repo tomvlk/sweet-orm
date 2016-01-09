@@ -13,7 +13,7 @@ matrix:
     - php: 'nightly'
 
 before_script:
-  - mysql < scripts/testing_mysql.sql
+  - mysql < scripts/test_mysql.sql
 
 install:
   - composer self-update
