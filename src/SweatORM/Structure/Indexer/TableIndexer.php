@@ -48,11 +48,11 @@ class TableIndexer implements Indexer
         $table = $this->reader->getClassAnnotation($this->entityClass, Table::class);
 
         if (! $table instanceof Table) {
-            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' has no Table entity!");
+            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' has no Table entity!"); // @codeCoverageIgnore
         }
 
         if ($table->name == null) {
-            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' is required to have the name parameter in the Table annotation.");
+            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' is required to have the name parameter in the Table annotation."); // @codeCoverageIgnore
         }
 
         $structure->table = $table;

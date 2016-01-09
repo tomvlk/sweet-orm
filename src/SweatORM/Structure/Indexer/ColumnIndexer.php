@@ -63,7 +63,7 @@ class ColumnIndexer implements Indexer
                 }
 
                 if ($column->type == null) {
-                    throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' has property ('".$property->getName()."') with @Column but no type is given!");
+                    throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' has property ('".$property->getName()."') with @Column but no type is given!"); // @codeCoverageIgnore
                 }
 
                 $structure->columnNames[] = $column->name;

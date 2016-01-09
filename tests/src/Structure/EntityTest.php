@@ -8,6 +8,7 @@
 
 namespace SweatORM\Tests\Structure;
 
+use SweatORM\EntityManager;
 use SweatORM\Structure\Indexer\EntityIndexer;
 use \SweatORM\Tests\Models\Post;
 use \SweatORM\Tests\Models\Category;
@@ -42,4 +43,40 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals("category", $structure->tableName);
     }
+
+    /**
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\EntityManager::getInstance
+     * @covers \SweatORM\EntityManager::isRegistered
+     * @covers \SweatORM\EntityManager::registerEntity
+     * @covers \SweatORM\EntityManager::getEntityStructure
+     * @covers \SweatORM\Structure\EntityStructure
+     * @covers \SweatORM\Structure\Indexer\EntityIndexer
+     */
+    public function testRegisterEntity()
+    {
+        $manager = EntityManager::getInstance();
+
+        $registered = $manager->isRegistered(Post::class);
+        $this->assertFalse($registered);
+
+
+
+        $manager->registerEntity(Category::class);
+
+        $registered = $manager->isRegistered(Category::class);
+        $this->assertTrue($registered);
+
+
+        $structure = $manager->getEntityStructure(Post::class);
+        $this->assertFalse($structure);
+
+
+        $structure = $manager->getEntityStructure(Category::class);
+        $this->assertInstanceOf("\\SweatORM\\Structure\\EntityStructure", $structure);
+        $this->assertEquals(Category::class, $structure->name);
+        $this->assertEquals("category", $structure->tableName);
+    }
+
+
 }

@@ -62,11 +62,13 @@ class EntityIndexer
     public function __construct($entityClassName)
     {
         $this->entityClass = new \ReflectionClass($entityClassName);
-        $this->entity = new EntityStructure();
 
         if (! $this->entityClass->isSubclassOf("\\SweatORM\\Entity")) {
-            throw new \UnexpectedValueException("The className for getTable should be a class that is extending the SweatORM Entity class");
+            throw new \UnexpectedValueException("The className for getTable should be a class that is extending the SweatORM Entity class"); // @codeCoverageIgnore
         }
+
+        $this->entity = new EntityStructure();
+        $this->entity->name = $this->entityClass->getName();
 
         // Reader
         $reader = new AnnotationReader();
@@ -76,7 +78,7 @@ class EntityIndexer
 
         // Validate Entity annotation
         if ($this->entityAnnotation === null || ! $this->entityAnnotation instanceof Entity) {
-            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' should use Annotations to use it! Please look at the documentation for help.");
+            throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' should use Annotations to use it! Please look at the documentation for help."); // @codeCoverageIgnore
         }
 
         // Run all the indexers
