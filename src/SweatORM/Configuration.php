@@ -7,6 +7,7 @@
  */
 
 namespace SweatORM;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 /**
  * Configuration Holder
@@ -23,6 +24,14 @@ class Configuration
      */
     private static $config = array();
 
+
+    /**
+     * Are the annotations registered?
+     *
+     * @var bool
+     */
+    private static $registered = false;
+
     /**
      * Set configuration value.
      *
@@ -32,6 +41,12 @@ class Configuration
     public static function set($key, $value)
     {
         self::$config[$key] = $value;
+
+        // Check if we need to register the Annotations
+        if (!self::$registered) {
+            AnnotationRegistry::registerFile(__DIR__ . '/Structure/SweatAnnotations.php');
+            self::$registered = true;
+        }
     }
 
     /**
