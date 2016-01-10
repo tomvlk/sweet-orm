@@ -10,6 +10,7 @@ namespace SweatORM\Tests\Models;
 
 use SweatORM\Entity;
 use SweatORM\Structure\Column;
+use SweatORM\Structure\ManyToOne;
 use SweatORM\Structure\Table;
 
 /**
@@ -36,6 +37,7 @@ class Post extends Entity
     /**
      * @var int
      * @Column(type="integer")
+     * @ManyToOne(targetEntity="SweatORM\Tests\Models\Category")
      */
     public $category;
 

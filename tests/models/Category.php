@@ -9,6 +9,7 @@
 namespace SweatORM\Tests\Models;
 
 use SweatORM\Entity;
+use SweatORM\Structure\OneToMany;
 use SweatORM\Structure\Table;
 use SweatORM\Structure\Column;
 
@@ -38,4 +39,13 @@ class Category extends Entity
      * @Column(type="string")
      */
     public $description;
+
+
+    // Relations to other Entities
+
+    /**
+     * @var Post[]
+     * @OneToMany(targetEntity="SweatORM\Tests\Models\Post", targetForeignKey="category")
+     */
+    public $posts;
 }
