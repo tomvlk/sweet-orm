@@ -61,12 +61,13 @@ class RelationManager
      * Solve relation
      *
      * @param string $virtualProperty
+     * @param bool $cacheOnly Only from cache
      * @return mixed
      *
      * @throws RelationException
      * @throws \Exception
      */
-    public function fetch($virtualProperty)
+    public function fetch($virtualProperty, $cacheOnly = false)
     {
         // Check for existing of the relation property
         if (! in_array($virtualProperty, $this->structure->relationProperties) || ! isset($this->structure->relations[$virtualProperty])) {
@@ -92,6 +93,11 @@ class RelationManager
         $search = $this->entity->{$relation->join->column};
         if (isset( self::$lazy[get_class($this->entity)] [$virtualProperty] [$search] )) {
             return self::$lazy[get_class($this->entity)] [$virtualProperty] [$search];
+        }
+
+        // If only from cache then return null, as it isn't in the cache right now!
+        if ($cacheOnly) {
+            return null;
         }
 
         $solverName = join('', array_slice(explode("\\", get_class($relation)), -1));

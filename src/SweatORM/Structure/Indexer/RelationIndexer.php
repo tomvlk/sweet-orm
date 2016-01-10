@@ -12,6 +12,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use SweatORM\Entity;
 use SweatORM\Exception\InvalidAnnotationException;
 use SweatORM\Exception\RelationException;
+use SweatORM\Structure\Annotation\ManyToOne;
 use SweatORM\Structure\EntityStructure;
 use SweatORM\Structure\Annotation\Join;
 use SweatORM\Structure\Annotation\OneToMany;
@@ -63,7 +64,7 @@ class RelationIndexer implements Indexer
 
             if ($relation !== null && $relation instanceof Relation) {
                 switch(get_class($relation)) {
-                    case OneToOne::class: // @codeCoverageIgnore
+                    case OneToOne::class || ManyToOne::class: // @codeCoverageIgnore
                         $this->oneToOne($structure, $property, $relation);
                         break;
                     case OneToMany::class: // @codeCoverageIgnore
