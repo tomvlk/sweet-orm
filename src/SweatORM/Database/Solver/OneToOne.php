@@ -1,13 +1,12 @@
 <?php
 /**
- * OneToOne.php Description
+ * OneToOne Solver
  *
  * @author     Tom Valk <tomvalk@lt-box.info>
  * @copyright  2016 Tom Valk
  */
 
 namespace SweatORM\Database\Solver;
-
 
 use SweatORM\Database\Solver;
 use SweatORM\Entity;

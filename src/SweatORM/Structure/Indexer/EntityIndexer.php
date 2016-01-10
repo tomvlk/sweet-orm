@@ -28,11 +28,6 @@ class EntityIndexer
     );
 
     /**
-     * @var array Hold the instances of the indexer
-     */
-    private $indexerInstances = array();
-
-    /**
      * @var \ReflectionClass Entity Class ReflectionClass
      */
     private $entityClass;

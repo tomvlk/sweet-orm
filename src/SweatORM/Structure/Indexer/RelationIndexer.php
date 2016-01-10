@@ -63,10 +63,10 @@ class RelationIndexer implements Indexer
 
             if ($relation !== null && $relation instanceof Relation) {
                 switch(get_class($relation)) {
-                    case OneToOne::class:
+                    case OneToOne::class: // @codeCoverageIgnore
                         $this->oneToOne($structure, $property, $relation);
                         break;
-                    case OneToMany::class:
+                    case OneToMany::class: // @codeCoverageIgnore
                         $this->oneToMany($structure, $property, $relation);
                         break;
                 }
@@ -89,7 +89,7 @@ class RelationIndexer implements Indexer
 
         $reflection = new \ReflectionClass($to);
         if (! $reflection->isSubclassOf(Entity::class)) {
-            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!");
+            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore
         }
 
         // Get join and set the join into the relation
@@ -116,12 +116,16 @@ class RelationIndexer implements Indexer
 
         $reflection = new \ReflectionClass($to);
         if (! $reflection->isSubclassOf(Entity::class)) {
-            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!");
+            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore
         }
 
         $join = $this->getJoin($property);
-        // TODO: One to many.
+        $relation->join = $join;
 
+        // Add declaration to the structure
+        $structure->relationProperties[] = $property->getName();
+        $structure->foreignColumnNames[] = $join->column;
+        $structure->relations[$property->getName()] = $relation;
     }
 
     /**
@@ -136,10 +140,10 @@ class RelationIndexer implements Indexer
     {
         $join = $this->reader->getPropertyAnnotation($property, Join::class);
         if ($exception && ($join === null || ! $join instanceof Join)) {
-            throw new RelationException("Relation in '".$property->getDeclaringClass()."' -> '".$property->getName()."' should have @Join annotation!");
+            throw new RelationException("Relation in '".$property->getDeclaringClass()->getName()."' -> '".$property->getName()."' should have @Join annotation!"); // @codeCoverageIgnore
         }
         if ($exception && ($join->column === null || $join->targetColumn === null)) {
-            throw new RelationException("Join in '".$property->getDeclaringClass()."' -> '".$property->getName()."' should have the local column and targetColumn filled in!");
+            throw new RelationException("Join in '".$property->getDeclaringClass()->getName()."' -> '".$property->getName()."' should have the local column and targetColumn filled in!"); // @codeCoverageIgnore
         }
         return $join;
     }

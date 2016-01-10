@@ -265,5 +265,38 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Category::class, $category);
     }
 
+    /**
+     * @covers \SweatORM\Entity
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Structure\RelationManager
+     * @covers \SweatORM\Database\Query
+     * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweatORM\Database\Solver
+     * @covers \SweatORM\Database\Solver\OneToMany
+     */
+    public function testOneToManyRelation()
+    {
+        Utilities::resetDatabase();
+
+        // Get category 1
+        /** @var Category $cat */
+        $cat = Category::get(1);
+
+
+        // Get posts
+        $posts = $cat->posts;
+        $this->assertEquals(4, count($posts));
+
+        // The lazy category of the post should be exactly the same as the one we had fetched before!
+        foreach($posts as $post) {
+            $this->assertEquals($cat, $post->category);
+        }
+
+        // Get posts again (testing cache)
+        $posts = $cat->posts;
+
+        $this->assertEquals(4, count($posts));
+    }
+
 
 }
