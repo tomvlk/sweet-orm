@@ -12,6 +12,7 @@ use SweatORM\Entity;
 use SweatORM\EntityManager;
 use SweatORM\Exception\ORMException;
 use SweatORM\Exception\QueryException;
+use SweatORM\Structure\Column;
 use SweatORM\Structure\EntityStructure;
 
 /**
@@ -56,10 +57,15 @@ class Query
     /* ===== Query Parts ===== */
     private $start = "";
     private $table = "";
+    private $data = "";
     private $where = "";
     private $order = "";
     private $limit = "";
 
+
+    /* ===== Helping Variables ===== */
+    /** @var Column[] $columnOrder Will hold the column order for inserting */
+    private $columnOrder = array();
 
     /* ===== Building Variables ===== */
     /** @var array */
@@ -72,6 +78,8 @@ class Query
     private $sortBy = null;
     /** @var null|string */
     private $sortOrder = null;
+    /** @var array */
+    private $changeData = array();
 
     /* ===== Storage for Binding ===== */
     private $bindValues = array();
@@ -151,12 +159,105 @@ class Query
      * @param string $table
      * @return Query $this
      */
-    public function into($table)
+    public function into($table = "")
     {
+        if (empty($table)) {
+            $table = $this->structure->tableName;
+        }
+
         $this->table = $table;
         $this->queryType = self::QUERY_INSERT;
+
+        // Determinate the column order
+        $this->columnOrder = array();
+        foreach ($this->structure->columns as $column) {
+            $this->columnOrder[] = $column;
+        }
+
         return $this;
     }
+
+    /**
+     * Update table
+     *
+     * @param string $table
+     * @return Query $this
+     */
+    public function update($table = "")
+    {
+        if (empty($table)) {
+            $table = $this->structure->tableName;
+        }
+
+        $this->table = $table;
+        $this->queryType = self::QUERY_UPDATE;
+        return $this;
+    }
+
+
+    /**
+     * Set data for inserting or updating
+     *
+     * @param array $data
+     * @return Query $this
+     */
+    public function set($data)
+    {
+        if ($this->queryType !== self::QUERY_INSERT && $this->queryType !== self::QUERY_UPDATE) {
+            $this->exception = new QueryException("When using set/data you must do a insert into or update first! Query is not in UPDATE or INSERT mode!", 0, $this->exception);
+            return $this;
+        }
+        if (! is_array($data)) {
+            $this->exception = new QueryException("set()/data() must have an array data parameter!", 0, $this->exception);
+            return $this;
+        }
+
+        // Prepare the data
+        $this->data = "";
+        $this->changeData = array();
+
+        /** @var array $columnNames Hold the column names we got from the $data array */
+        $columnNames = array();
+
+        // Verify and generate insert parts
+        foreach ($this->columnOrder as $currentColumn) {
+            // Verify if all the columns that are non-null exists when inserting
+            if ($this->queryType === self::QUERY_INSERT) {
+                // We MUST fill in the non null columns, with exception on the auto increment column
+                if (! $currentColumn->null && ! $currentColumn->autoIncrement) {
+                    if (! isset($data[$currentColumn->name])) {
+                        $this->exception = new QueryException("Inserting data failed, data must contain all non-null columns defined in the entity!", 0, $this->exception);
+                        return $this;
+                    }
+                }
+            }
+
+            // If data exists for current column
+            if (isset($data[$currentColumn->name])) {
+                $value = $data[$currentColumn->name];
+
+                // Current column exists, save data
+                $this->changeData[$currentColumn->name] = $value;
+            } else {
+                // We will insert NULL in this column, it's not given in the $data array
+                $this->changeData[$currentColumn->name] = null;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set data for inserting or updating
+     *
+     * @param array $data
+     * @return Query $this
+     */
+    public function values($data)
+    {
+        return $this->set($data);
+    }
+
 
 
     /**
@@ -178,6 +279,12 @@ class Query
      */
     public function where($criteria, $operator = null, $value = null)
     {
+        // Check if we are in select or update mode
+        if ($this->queryType !== self::QUERY_SELECT && $this->queryType !== self::QUERY_UPDATE) {
+            $this->exception = new QueryException("When doing a where() we must be in SELECT or UPDATE mode!", 0, $this->exception);
+            return $this;
+        }
+
         // If the operator is the value, then we are going to use the = operator
         if (! is_array($criteria) && $value === null && $this->validValue($operator, "=") && func_num_args() === 2) {
             // Operator is now value!

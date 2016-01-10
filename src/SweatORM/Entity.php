@@ -31,9 +31,14 @@ abstract class Entity
 
 
 
+    /** ==== Entity Instance Operatios **/
+    public function save()
+    {
+        return EntityManager::getInstance()->save($this);
+    }
 
 
-    /** ==== Entity Operation Functions, will apply on specific entities ==== **/
+    /** ==== Entity Static Operation Functions, will apply on specific entities ==== **/
 
 
     /**

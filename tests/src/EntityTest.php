@@ -82,6 +82,12 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         }catch(QueryException $qe) {
             $this->assertTrue(true);
         }
+        try { // Invalid Mode
+            Category::find()->insert()->into()->where('id', 'SADSDASD', 1)->all();
+            $this->assertTrue(false);
+        }catch(QueryException $qe) {
+            $this->assertTrue(true);
+        }
 
 
 
