@@ -169,7 +169,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Make new post in category 1
         $post = new Post();
-        $post->categoryid = 1;
+        $post->category = Category::get(1);
 
         // Will not have all required columns filled for now, need to give an exception!
         try {
@@ -178,7 +178,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         } catch (QueryException $qe) {
             $this->assertTrue(true);
         }
-
 
         // Now fill in the correct fields
         $post->authorid = 1;
@@ -299,4 +298,61 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    /**
+     * @covers \SweatORM\Entity
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Structure\RelationManager
+     * @covers \SweatORM\Database\Query
+     * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweatORM\Database\Solver
+     * @covers \SweatORM\Database\Solver\OneToOne
+     */
+    public function testSaveOneToOne()
+    {
+        Utilities::resetDatabase();
+
+        $category1 = Category::get(1);
+
+        // Make new post in category 1
+        $post = new Post();
+        $post->authorid = 1;
+        $post->category = $category1;
+        $post->title = "Sample_Relation_Save";
+        $post->content = "Sample";
+
+        $status = $post->save();
+        $this->assertTrue($status);
+        $this->assertEquals(1, $post->categoryid);
+
+
+        // Test wrong saves
+        $category = new Category();
+
+        // Unsaved category
+        $post = new Post();
+
+        try{
+            $post->category = $category;
+            $this->assertTrue(false);
+        }catch(RelationException $re) {
+            $this->assertTrue(true);
+        }
+
+        try{ // Wrong type and not null
+            $post->category = false;
+            $this->assertTrue(false);
+        }catch(RelationException $re) {
+            $this->assertTrue(true);
+        }
+
+        try{ // Wrong property
+            $post->asasdf = false;
+            $this->assertTrue(false);
+        }catch(RelationException $re) {
+            $this->assertTrue(true);
+        }
+
+        // Try to set it null, should give no errors, only when saving!
+        $post->category = null;
+    }
 }

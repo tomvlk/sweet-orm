@@ -10,6 +10,7 @@ namespace SweatORM\Tests;
 
 use SweatORM\Configuration;
 use SweatORM\ConnectionManager;
+use SweatORM\Structure\RelationManager;
 
 class Utilities {
 
@@ -32,6 +33,9 @@ class Utilities {
     public static function resetDatabase()
     {
         $connection = ConnectionManager::getConnection();
+
+        // Clear Relation cache
+        RelationManager::clearCache();
 
         $connection->exec(/** @lang MySQL */
             "TRUNCATE TABLE post;");

@@ -7,6 +7,7 @@
  */
 
 namespace SweatORM;
+use SweatORM\Exception\RelationException;
 
 /**
  * Entity. Extend this class for all the functionality you get with the ORM
@@ -42,6 +43,18 @@ abstract class Entity
     public final function __get($name)
     {
         return EntityManager::getInstance()->getLazy($this, $name);
+    }
+
+    /**
+     * Set relationship entity
+     *
+     * @param $name
+     * @param $value
+     * @throws \Exception|RelationException
+     */
+    public final function __set($name, $value)
+    {
+        EntityManager::getInstance()->setLazy($this, $name, $value);
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * ${FILE_NAME} Description
+ * Query Generator Description
  *
  * @author     Tom Valk <tomvalk@lt-box.info>
  * @copyright  2016 Tom Valk
@@ -8,8 +8,7 @@
 
 namespace SweatORM\Database;
 
-
-use SweatORM\Structure\Column;
+use SweatORM\Structure\Annotation\Column;
 
 class QueryGenerator
 {

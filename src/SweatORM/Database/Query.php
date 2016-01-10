@@ -12,7 +12,7 @@ use SweatORM\Entity;
 use SweatORM\EntityManager;
 use SweatORM\Exception\ORMException;
 use SweatORM\Exception\QueryException;
-use SweatORM\Structure\Column;
+use SweatORM\Structure\Annotation\Column;
 use SweatORM\Structure\EntityStructure;
 
 /**

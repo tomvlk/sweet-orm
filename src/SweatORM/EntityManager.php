@@ -155,6 +155,31 @@ class EntityManager
         return RelationManager::with($entity)->fetch($name);
     }
 
+    /**
+     * Set a virtual property
+     *
+     * @param Entity $entity
+     * @param string $name
+     * @param Entity $value
+     * @throws RelationException
+     * @throws \Exception
+     */
+    public function setLazy($entity, $name, $value)
+    {
+        // Verify if virtual property exists
+        if (! in_array($name, $this->getEntityStructure($entity)->relationProperties)) {
+            throw new RelationException("Property '".$name."' is not a valid and declared property, or relation property!");
+        }
+
+        // Verify if value is also an entity!
+        if (! $value instanceof Entity && $value !== null) {
+            throw new RelationException("Property '".$name."' is a reference to a relationship, you should set the entity of that relationship!");
+        }
+
+        // Pass to the relationmanager
+        RelationManager::with($entity)->set($name, $value);
+    }
+
 
     /** ==== Entity Instance Operations **/
 

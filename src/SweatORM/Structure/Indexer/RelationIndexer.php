@@ -63,13 +63,13 @@ class RelationIndexer implements Indexer
             $relation = $this->reader->getPropertyAnnotation($property, Relation::class);
 
             if ($relation !== null && $relation instanceof Relation) {
-                switch(get_class($relation)) {
-                    case OneToOne::class || ManyToOne::class: // @codeCoverageIgnore
-                        $this->oneToOne($structure, $property, $relation);
-                        break;
-                    case OneToMany::class: // @codeCoverageIgnore
-                        $this->oneToMany($structure, $property, $relation);
-                        break;
+                $relationType = get_class($relation);
+
+                if ($relationType === OneToOne::class || $relationType === ManyToOne::class) {
+                    $this->oneToOne($structure, $property, $relation);
+                }
+                if ($relationType === OneToMany::class) {
+                    $this->oneToMany($structure, $property, $relation);
                 }
             }
         }
