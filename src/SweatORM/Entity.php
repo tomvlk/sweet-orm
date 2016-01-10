@@ -53,7 +53,7 @@ abstract class Entity
      * Get Entity with Primary Key value
      *
      * @param int|string $primaryValue
-     * @return Entity|false
+     * @return Entity|false|object
      */
     public static function get($primaryValue)
     {

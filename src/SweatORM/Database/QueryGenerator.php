@@ -175,6 +175,39 @@ class QueryGenerator
         $data .= ")";
     }
 
+    /**
+     * Generate Update Lines
+     *
+     * @param array $changeData
+     * @param string $data Reference: Data (set) line
+     * @param array $values Reference: Bind values
+     * @param array $types Reference: Bind types
+     */
+    public function generateUpdate($changeData, &$data, &$values, &$types)
+    {
+        // Prepare
+        $data = "";
+
+        // Generate the column definition
+        $idx = 0;
+        $max = count($changeData);
+        foreach ($changeData as $column => $value) {
+            // Prepare set part
+            $data .= "$column = ?";
+            $values[] = $value;
+            $types[] = $this->determinateType($value);
+
+            // Adding ,
+            if (($idx + 1) < $max) {
+                $data .= ",";
+            }
+
+            $idx++;
+        }
+    }
+
+
+
 
 
 

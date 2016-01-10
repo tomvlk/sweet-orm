@@ -191,6 +191,13 @@ class Query
 
         $this->table = $table;
         $this->queryType = self::QUERY_UPDATE;
+
+        // Determinate the column order
+        $this->columnOrder = array();
+        foreach ($this->structure->columns as $column) {
+            $this->columnOrder[] = $column;
+        }
+
         return $this;
     }
 
@@ -204,20 +211,17 @@ class Query
     public function set($data)
     {
         if ($this->queryType !== self::QUERY_INSERT && $this->queryType !== self::QUERY_UPDATE) {
-            $this->exception = new QueryException("When using set/data you must do a insert into or update first! Query is not in UPDATE or INSERT mode!", 0, $this->exception);
-            return $this;
+            $this->exception = new QueryException("When using set/data you must do a insert into or update first! Query is not in UPDATE or INSERT mode!", 0, $this->exception); // @codeCoverageIgnore
+            return $this; // @codeCoverageIgnore
         }
         if (! is_array($data)) {
-            $this->exception = new QueryException("set()/data() must have an array data parameter!", 0, $this->exception);
-            return $this;
+            $this->exception = new QueryException("set()/data() must have an array data parameter!", 0, $this->exception); // @codeCoverageIgnore
+            return $this; // @codeCoverageIgnore
         }
 
         // Prepare the data
         $this->data = "";
         $this->changeData = array();
-
-        /** @var array $columnNames Hold the column names we got from the $data array */
-        $columnNames = array();
 
         // Verify and generate insert parts
         foreach ($this->columnOrder as $currentColumn) {
@@ -230,6 +234,12 @@ class Query
                         return $this;
                     }
                 }
+            }
+
+            // Skip primary key when updating.
+            if ($this->queryType === self::QUERY_UPDATE && $currentColumn->primary) {
+                // Skip
+                continue;
             }
 
             // If data exists for current column
@@ -528,20 +538,20 @@ class Query
     {
         // Let the generator do his work now,
         if ($this->queryType !== self::QUERY_INSERT && $this->queryType !== self::QUERY_UPDATE) {
-            throw new QueryException("Can only do apply() on INSERT and UPDATE mode!", 0, $this->exception);
+            throw new QueryException("Can only do apply() on INSERT and UPDATE mode!", 0, $this->exception); // @codeCoverageIgnore
         }
 
         // Validate all variables
         if ($this->queryType === self::QUERY_INSERT) {
             // We should have the table, all required data.
             if (count($this->changeData) === 0 || empty($this->table)) {
-                throw new QueryException("When inserting you should at least give a table and the inserting data!", 0, $this->exception);
+                throw new QueryException("When inserting you should at least give a table and the inserting data!", 0, $this->exception); // @codeCoverageIgnore
             }
         }
         if ($this->queryType === self::QUERY_UPDATE) {
             // We should have a where with at least one condition, data, and a table
             if (count($this->whereConditions) === 0 || count($this->changeData) === 0 || empty($this->table)) {
-                throw new QueryException("When updating you should at least give a table, at least one where condition and the updating data!", 0, $this->exception);
+                throw new QueryException("When updating you should at least give a table, at least one where condition and the updating data!", 0, $this->exception); // @codeCoverageIgnore
             }
         }
 
@@ -554,9 +564,9 @@ class Query
         }
 
         if ($this->queryType === self::QUERY_UPDATE) {
-            //$this->generator->generateUpdate();
+            $this->generator->generateUpdate($this->changeData, $this->data, $this->bindValues, $this->bindTypes);
+            $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
         }
-
 
         $this->query = "";
         $this->combineQuery();
@@ -583,10 +593,6 @@ class Query
         }
         return $status;
     }
-
-
-
-
 
 
 

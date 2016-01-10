@@ -164,6 +164,8 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      */
     public function testInserting()
     {
+        Utilities::resetDatabase();
+
         // Make new post in category 1
         $post = new Post();
         $post->category = 1;
@@ -188,6 +190,37 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
         $this->assertEquals(11, $post->_id);
         $this->assertEquals(11, $post->id);
+    }
+
+
+    /**
+     * @covers \SweatORM\Entity
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Database\Query
+     * @covers \SweatORM\Database\QueryGenerator
+     */
+    public function testUpdating()
+    {
+        Utilities::resetDatabase();
+
+        $post = new Post();
+        $post->category = 1;
+        $post->author = 1;
+        $post->title = "Sample_Update_1";
+        $post->content = "Sample Insert 1";
+
+        $status = $post->save();
+        $this->assertTrue($status);
+
+        // Update the post, change the content
+        $post->content = "Sample Update 1";
+
+        $status = $post->save();
+        $this->assertTrue($status);
+
+        // Get the post back in another find query
+        $updated = Post::get($post->_id);
+        $this->assertEquals("Sample Update 1", $updated->content);
     }
 
 

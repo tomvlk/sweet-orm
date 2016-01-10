@@ -53,8 +53,8 @@ class EntityManager
     public function isRegistered($entityClassName)
     {
         if ($entityClassName instanceof Entity) {
-            $reflection = new \ReflectionClass($entityClassName);
-            $entityClassName = $reflection->getName();
+            $reflection = new \ReflectionClass($entityClassName); // @codeCoverageIgnore
+            $entityClassName = $reflection->getName(); // @codeCoverageIgnore
         }
 
         return isset($this->entities[$entityClassName]);
@@ -106,20 +106,22 @@ class EntityManager
 
         if ($entity->_saved) {
             // Update
+            return $query->update()->set(get_object_vars($entity))->where(array($structure->primaryColumn->name => $entity->_id))->apply();
         } else {
+            // Insert
             $id = $query->insert()->into($structure->tableName)->values(get_object_vars($entity))->apply();
 
             if ($id === false) {
-                return false;
+                return false; // @codeCoverageIgnore
             }
 
             // Save ID and state
             $entity->{$structure->primaryColumn->propertyName} = $id;
             $entity->_id = $id;
             $entity->_saved = true;
-        }
 
-        return true;
+            return true;
+        }
     }
 
 
