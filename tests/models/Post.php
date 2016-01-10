@@ -34,18 +34,18 @@ class Post extends Entity
      * @var int
      * @Column(type="integer")
      */
-    public $author;
+    public $authorid;
 
     /**
      * @var int
-     * @Column(name="category", type="integer")
+     * @Column(type="integer")
      */
     public $categoryid;
 
     /**
      * @var Category
      * @OneToMany(targetEntity="SweatORM\Tests\Models\Category", targetProperty="posts")
-     * @Join(column="category", targetForeignColumn="id")
+     * @Join(column="categoryid", targetForeignColumn="id")
      */
     public $category;
 

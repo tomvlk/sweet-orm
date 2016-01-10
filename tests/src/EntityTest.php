@@ -129,7 +129,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
         // Test with valid where, limit and offset in one
-        $posts = Post::find()->where(array('category' => '1'))->sort("title", "ASC")->limit(2)->offset(2)->all();
+        $posts = Post::find()->where(array('categoryid' => '1'))->sort("title", "ASC")->limit(2)->offset(2)->all();
         $this->assertEquals(2, count($posts));
         $this->assertEquals("Sample News #3", $posts[0]->title);
         $this->assertEquals("Sample News #4", $posts[1]->title);
@@ -180,7 +180,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
         // Now fill in the correct fields
-        $post->author = 1;
+        $post->authorid = 1;
         $post->title = "Sample_Insert_1";
         $post->content = "Sample Insert Content";
 
@@ -205,7 +205,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $post = new Post();
         $post->categoryid = 1;
-        $post->author = 1;
+        $post->authorid = 1;
         $post->title = "Sample_Update_1";
         $post->content = "Sample Insert 1";
 

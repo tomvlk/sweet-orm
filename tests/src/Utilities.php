@@ -50,16 +50,16 @@ class Utilities {
         );
 
         $posts = array(
-            array('id' => '1', 'author' => '1', 'category' => '1', 'title' => 'Sample News #1', 'content' => 'Sample News 1'),
-            array('id' => '2', 'author' => '1', 'category' => '1', 'title' => 'Sample News #2', 'content' => 'Sample News 2'),
-            array('id' => '3', 'author' => '1', 'category' => '1', 'title' => 'Sample News #3', 'content' => 'Sample News 3'),
-            array('id' => '4', 'author' => '1', 'category' => '1', 'title' => 'Sample News #4', 'content' => 'Sample News 4'),
-            array('id' => '5', 'author' => '1', 'category' => '2', 'title' => 'Sample Press #1', 'content' => 'Sample Press 1'),
-            array('id' => '6', 'author' => '1', 'category' => '2', 'title' => 'Sample Press #2', 'content' => 'Sample Press 2'),
-            array('id' => '7', 'author' => '1', 'category' => '3', 'title' => 'Sample FAQ #1', 'content' => 'Sample FAQ 1'),
-            array('id' => '8', 'author' => '1', 'category' => '3', 'title' => 'Sample FAQ #2', 'content' => 'Sample FAQ 2'),
-            array('id' => '9', 'author' => '1', 'category' => '4', 'title' => 'Sample Downloads #1', 'content' => 'Sample Downloads 1'),
-            array('id' => '10', 'author' => '1', 'category' => '4', 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
+            array('id' => '1', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #1', 'content' => 'Sample News 1'),
+            array('id' => '2', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #2', 'content' => 'Sample News 2'),
+            array('id' => '3', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #3', 'content' => 'Sample News 3'),
+            array('id' => '4', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #4', 'content' => 'Sample News 4'),
+            array('id' => '5', 'authorid' => '1', 'categoryid' => '2', 'title' => 'Sample Press #1', 'content' => 'Sample Press 1'),
+            array('id' => '6', 'authorid' => '1', 'categoryid' => '2', 'title' => 'Sample Press #2', 'content' => 'Sample Press 2'),
+            array('id' => '7', 'authorid' => '1', 'categoryid' => '3', 'title' => 'Sample FAQ #1', 'content' => 'Sample FAQ 1'),
+            array('id' => '8', 'authorid' => '1', 'categoryid' => '3', 'title' => 'Sample FAQ #2', 'content' => 'Sample FAQ 2'),
+            array('id' => '9', 'authorid' => '1', 'categoryid' => '4', 'title' => 'Sample Downloads #1', 'content' => 'Sample Downloads 1'),
+            array('id' => '10', 'authorid' => '1', 'categoryid' => '4', 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
         );
 
         foreach ($category as $row) {
@@ -77,7 +77,7 @@ class Utilities {
 
 
         foreach ($posts as $row) {
-            $sql = "INSERT INTO post (id, author, category, title, content) VALUES (?, ?, ?, ?, ?);";
+            $sql = "INSERT INTO post (id, authorid, categoryid, title, content) VALUES (?, ?, ?, ?, ?);";
             $query = $connection->prepare($sql);
 
             $idx = 1;

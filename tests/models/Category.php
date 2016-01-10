@@ -45,7 +45,7 @@ class Category extends Entity
 
     /**
      * @var Post[]
-     * @OneToMany(targetEntity="SweatORM\Tests\Models\Post", )
+     * @OneToMany(targetEntity="SweatORM\Tests\Models\Post", targetProperty="categoryid")
      */
     public $posts;
 }
