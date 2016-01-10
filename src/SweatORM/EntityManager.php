@@ -10,6 +10,7 @@ namespace SweatORM;
 
 
 use SweatORM\Database\Query;
+use SweatORM\Exception\RelationException;
 use SweatORM\Structure\EntityStructure;
 use SweatORM\Structure\Indexer\EntityIndexer;
 
@@ -21,6 +22,9 @@ class EntityManager
     /** @var EntityStructure[] Structures */
     private $entities = array();
 
+    /** @var array<string, array> Lazy Loading results */
+    private $lazy = array();
+
     /**
      * Get entity manager
      * @return EntityManager
@@ -31,6 +35,51 @@ class EntityManager
             self::$instance = new EntityManager();
         }
         return self::$instance;
+    }
+
+    /**
+     * After Fetch entity hook
+     *
+     * @param bool $saved
+     * @param Entity[]|Entity|null $result
+     * @return Entity|Entity[]|null
+     */
+    public function afterFetch($saved, $result)
+    {
+        // Multiple results
+        if (is_array($result)) {
+            $all = array();
+            foreach ($result as $entity) {
+                if ($entity instanceof Entity) {
+                    $all[] = self::afterFetch($saved, $entity);
+                }
+            }
+            return $all;
+        }
+
+        // Normal single processing.
+        if ($result instanceof Entity) {
+            $result->_saved = $saved;
+
+            // Process relation properties, delete the 'real' props
+            $this->injectVirtualProperties($result);
+        }
+        return $result;
+    }
+
+    /**
+     * Inject Virtual Properties for relations
+     *
+     * @param Entity $entity
+     */
+    public function injectVirtualProperties($entity)
+    {
+        $structure = $this->getEntityStructure($entity);
+        if (count($structure->relationProperties) > 0) {
+            foreach ($structure->relationProperties as $removeProperty) {
+                unset($entity->{$removeProperty});
+            }
+        }
     }
 
     /**
@@ -88,6 +137,25 @@ class EntityManager
         return $this->entities[$entityClassName];
     }
 
+
+    /**
+     * Will be called for getting the relationship result, lazy loading.
+     *
+     * @param Entity $entity
+     * @param string $name
+     *
+     * @return mixed
+     * @throws RelationException When not found in relation, or the relation is invalid.
+     */
+    public function getLazy($entity, $name)
+    {
+        // Verify if virtual property exists
+        if (! in_array($name, $this->getEntityStructure($entity)->relationProperties)) {
+            throw new RelationException("Property '".$name."' is not a valid and declared property, or relation property!");
+        }
+
+        var_dump($name);
+    }
 
 
     /** ==== Entity Instance Operations **/

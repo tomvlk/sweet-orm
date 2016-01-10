@@ -39,13 +39,4 @@ class Category extends Entity
      * @Column(type="string")
      */
     public $description;
-
-
-    // Relations to other Entities
-
-    /**
-     * @var Post[]
-     * @OneToMany(targetEntity="SweatORM\Tests\Models\Post", targetProperty="categoryid")
-     */
-    public $posts;
 }

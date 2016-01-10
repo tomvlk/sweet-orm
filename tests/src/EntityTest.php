@@ -10,6 +10,7 @@ namespace SweatORM\Tests;
 
 use SweatORM\ConnectionManager;
 use SweatORM\Exception\QueryException;
+use SweatORM\Exception\RelationException;
 use SweatORM\Tests\Models\Category;
 use SweatORM\Tests\Models\Post;
 
@@ -221,6 +222,39 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         // Get the post back in another find query
         $updated = Post::get($post->_id);
         $this->assertEquals("Sample Update 1", $updated->content);
+    }
+
+
+    // Relation
+    /**
+     * @covers \SweatORM\Entity
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Database\Query
+     * @covers \SweatORM\Database\QueryGenerator
+     */
+    public function testOneToOneRelation()
+    {
+        Utilities::resetDatabase();
+
+        $post = new Post();
+        $post->categoryid = 1;
+        $post->authorid = 1;
+        $post->title = "Sample_Relation_1";
+        $post->content = "Sample 1";
+
+        $status = $post->save();
+        $this->assertTrue($status);
+
+        // Get invalid property
+        try {
+            $post->nononon;
+            $this->assertTrue(false);
+        } catch (RelationException $re) {
+            $this->assertTrue(true);
+        }
+
+        // Get property 'category'.
+        var_dump($post->category);
     }
 
 

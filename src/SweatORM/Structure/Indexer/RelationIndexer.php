@@ -9,9 +9,12 @@
 namespace SweatORM\Structure\Indexer;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use SweatORM\Entity;
 use SweatORM\Exception\InvalidAnnotationException;
+use SweatORM\Exception\RelationException;
 use SweatORM\Structure\Column;
 use SweatORM\Structure\EntityStructure;
+use SweatORM\Structure\Join;
 use SweatORM\Structure\OneToMany;
 use SweatORM\Structure\OneToOne;
 use SweatORM\Structure\Relation;
@@ -77,19 +80,68 @@ class RelationIndexer implements Indexer
      * @param EntityStructure $structure
      * @param \ReflectionProperty $property
      * @param OneToOne|Relation $relation
+     * @throws RelationException Class not correct, no target property found or not extending Entity.
+     * @throws \ReflectionException Class not found
      */
     private function oneToOne(&$structure, $property, $relation)
     {
-        var_dump($relation);
+        $from = $structure->name;
+        $to = $relation->targetEntity;
+
+        $reflection = new \ReflectionClass($to);
+        if (! $reflection->isSubclassOf(Entity::class)) {
+            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!");
+        }
+
+        // Get join and set the join into the relation
+        $join = $this->getJoin($property);
+        $relation->join = $join;
+
+        // Add declaration to the structure
+        $structure->relationProperties[] = $property->getName();
+        $structure->foreignColumnNames[] = $join->column;
+        $structure->relations[] = $relation;
     }
 
     /**
      * @param EntityStructure $structure
      * @param \ReflectionProperty $property
      * @param OneToMany|Relation $relation
+     * @throws RelationException Class not correct, no target property found or not extending Entity.
+     * @throws \ReflectionException Class not found
      */
     private function oneToMany(&$structure, $property, $relation)
     {
-        //var_dump($relation);
+        $from = $structure->name;
+        $to = $relation->targetEntity;
+
+        $reflection = new \ReflectionClass($to);
+        if (! $reflection->isSubclassOf(Entity::class)) {
+            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!");
+        }
+
+        $join = $this->getJoin($property);
+        // TODO: One to many.
+
+    }
+
+    /**
+     * Get Join
+     *
+     * @param \ReflectionProperty $property
+     * @param bool $exception
+     * @return Join
+     * @throws RelationException
+     */
+    private function getJoin(\ReflectionProperty $property, $exception = true)
+    {
+        $join = $this->reader->getPropertyAnnotation($property, Join::class);
+        if ($exception && ($join === null || ! $join instanceof Join)) {
+            throw new RelationException("Relation in '".$property->getDeclaringClass()."' -> '".$property->getName()."' should have @Join annotation!");
+        }
+        if ($exception && ($join->column === null || $join->targetColumn === null)) {
+            throw new RelationException("Join in '".$property->getDeclaringClass()."' -> '".$property->getName()."' should have the local column and targetColumn filled in!");
+        }
+        return $join;
     }
 }

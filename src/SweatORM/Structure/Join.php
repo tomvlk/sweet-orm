@@ -30,9 +30,9 @@ class Join implements Annotation
     public $column;
 
     /**
-     * Foreign key at the target side
+     * Target Column at the target side
      * @var string
      * @Required()
      */
-    public $targetForeignColumn;
+    public $targetColumn;
 }

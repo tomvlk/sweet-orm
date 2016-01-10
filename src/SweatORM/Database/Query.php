@@ -691,18 +691,6 @@ class Query
      */
     private function injectState($result)
     {
-        if (! is_array($result)) {
-            if ($result instanceof Entity) {
-                $result->_saved = true;
-            }
-            return $result;
-        }
-
-        foreach ($result as $entity) {
-            if ($entity instanceof Entity) {
-                $entity->_saved = true;
-            }
-        }
-        return $result;
+        return EntityManager::getInstance()->afterFetch(true, $result);
     }
 }

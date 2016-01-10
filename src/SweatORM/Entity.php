@@ -26,9 +26,23 @@ abstract class Entity
     public $_id = null;
 
 
+    /**
+     * Entity constructor.
+     */
+    public final function __construct()
+    {
+        EntityManager::getInstance()->injectVirtualProperties($this);
+    }
 
-
-
+    /**
+     * Relationship catcher
+     * @param $name
+     * @return mixed
+     */
+    public final function __get($name)
+    {
+        return EntityManager::getInstance()->getLazy($this, $name);
+    }
 
 
     /** ==== Entity Instance Operatios **/

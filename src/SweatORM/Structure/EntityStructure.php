@@ -58,10 +58,16 @@ class EntityStructure
     public $primaryColumn;
 
     /**
-     * Read Only! Foreign Columns
-     * @var Column[]
+     * Read Only! Foreign Column Names
+     * @var string[]
      */
-    public $foreignColumns;
+    public $foreignColumnNames = array();
+
+    /**
+     * Read Only! Virtual Property names of declared relations
+     * @var string[]
+     */
+    public $relationProperties = array();
 
     /**
      * Read Only! Relations to other Entities
@@ -69,9 +75,5 @@ class EntityStructure
      */
     public $relations = array();
 
-    /**
-     * Read Only! Foreign Column Names
-     * @var string[]
-     */
-    public $foreignColumnNames = array();
+
 }

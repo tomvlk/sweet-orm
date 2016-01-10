@@ -13,6 +13,7 @@ use SweatORM\Structure\Column;
 use SweatORM\Structure\Join;
 use SweatORM\Structure\ManyToOne;
 use SweatORM\Structure\OneToMany;
+use SweatORM\Structure\OneToOne;
 use SweatORM\Structure\Table;
 
 /**
@@ -44,8 +45,8 @@ class Post extends Entity
 
     /**
      * @var Category
-     * @OneToMany(targetEntity="SweatORM\Tests\Models\Category", targetProperty="posts")
-     * @Join(column="categoryid", targetForeignColumn="id")
+     * @OneToOne(targetEntity="SweatORM\Tests\Models\Category")
+     * @Join(column="categoryid", targetColumn="id")
      */
     public $category;
 
