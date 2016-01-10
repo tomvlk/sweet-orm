@@ -66,6 +66,10 @@ class ColumnIndexer implements Indexer
                     throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' has property ('".$property->getName()."') with @Column but no type is given!"); // @codeCoverageIgnore
                 }
 
+                // Set property name
+                $column->propertyName = $property->getName();
+
+                // Save column
                 $structure->columnNames[] = $column->name;
                 $structure->columns[] = $column;
 
