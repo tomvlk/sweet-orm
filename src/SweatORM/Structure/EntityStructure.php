@@ -74,7 +74,7 @@ class EntityStructure
 
     /**
      * Read Only! Relations to other Entities
-     * @var Relation[]
+     * @var array<string, Relation>
      */
     public $relations = array();
 

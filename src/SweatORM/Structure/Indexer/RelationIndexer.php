@@ -99,7 +99,7 @@ class RelationIndexer implements Indexer
         // Add declaration to the structure
         $structure->relationProperties[] = $property->getName();
         $structure->foreignColumnNames[] = $join->column;
-        $structure->relations[] = $relation;
+        $structure->relations[$property->getName()] = $relation;
     }
 
     /**
