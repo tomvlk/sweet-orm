@@ -6,19 +6,19 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Tests\Models;
+namespace SweetORM\Tests\Models;
 
-use SweatORM\Entity;
-use SweatORM\Structure\Annotation\Join;
-use SweatORM\Structure\Annotation\OneToMany;
-use SweatORM\Structure\Annotation\Table;
-use SweatORM\Structure\Annotation\Column;
+use SweetORM\Entity;
+use SweetORM\Structure\Annotation\Join;
+use SweetORM\Structure\Annotation\OneToMany;
+use SweetORM\Structure\Annotation\Table;
+use SweetORM\Structure\Annotation\Column;
 
 /**
  * Class Category
- * @package SweatORM\Tests\Models
+ * @package SweetORM\Tests\Models
  *
- * @\SweatORM\Structure\Annotation\Entity
+ * @\SweetORM\Structure\Annotation\Entity
  * @Table(name="category")
  */
 class Category extends Entity
@@ -46,7 +46,7 @@ class Category extends Entity
     // One To Many relationship
     /**
      * @var Post[]
-     * @OneToMany(targetEntity="SweatORM\Tests\Models\Post")
+     * @OneToMany(targetEntity="SweetORM\Tests\Models\Post")
      * @Join(column="id", targetColumn="categoryid")
      */
     public $posts;

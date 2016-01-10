@@ -6,15 +6,15 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Tests;
+namespace SweetORM\Tests;
 
-use SweatORM\Configuration as Config;
+use SweetORM\Configuration as Config;
 
 /**
  * Class ConfigurationTest
- * @package SweatORM\Tests
+ * @package SweetORM\Tests
  *
- * @coversDefaultClass \SweatORM\Configuration
+ * @coversDefaultClass \SweetORM\Configuration
  */
 class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {

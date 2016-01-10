@@ -6,13 +6,13 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Tests;
+namespace SweetORM\Tests;
 
-use SweatORM\ConnectionManager;
-use SweatORM\Exception\QueryException;
-use SweatORM\Exception\RelationException;
-use SweatORM\Tests\Models\Category;
-use SweatORM\Tests\Models\Post;
+use SweetORM\ConnectionManager;
+use SweetORM\Exception\QueryException;
+use SweetORM\Exception\RelationException;
+use SweetORM\Tests\Models\Category;
+use SweetORM\Tests\Models\Post;
 
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
@@ -26,10 +26,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
      */
     public function testFindQueryBuilder()
     {
@@ -137,10 +137,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
      */
     public function testGet()
     {
@@ -158,10 +158,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
      */
     public function testInserting()
     {
@@ -194,10 +194,10 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
      */
     public function testUpdating()
     {
@@ -224,11 +224,11 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Structure\RelationManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
      */
     public function testDeleting()
     {
@@ -267,13 +267,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
     // Relation
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Structure\RelationManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
-     * @covers \SweatORM\Database\Solver
-     * @covers \SweatORM\Database\Solver\OneToOne
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\OneToOne
      */
     public function testOneToOneRelation()
     {
@@ -306,13 +306,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Structure\RelationManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
-     * @covers \SweatORM\Database\Solver
-     * @covers \SweatORM\Database\Solver\OneToMany
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\OneToMany
      */
     public function testOneToManyRelation()
     {
@@ -340,13 +340,13 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers \SweatORM\Entity
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\Structure\RelationManager
-     * @covers \SweatORM\Database\Query
-     * @covers \SweatORM\Database\QueryGenerator
-     * @covers \SweatORM\Database\Solver
-     * @covers \SweatORM\Database\Solver\OneToOne
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\OneToOne
      */
     public function testSaveOneToOne()
     {

@@ -6,29 +6,29 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Tests\Structure;
+namespace SweetORM\Tests\Structure;
 
-use SweatORM\EntityManager;
-use SweatORM\Structure\Indexer\EntityIndexer;
-use \SweatORM\Tests\Models\Post;
-use \SweatORM\Tests\Models\Category;
+use SweetORM\EntityManager;
+use SweetORM\Structure\Indexer\EntityIndexer;
+use \SweetORM\Tests\Models\Post;
+use \SweetORM\Tests\Models\Category;
 
 /**
  * Class EntityTest
- * @package SweatORM\Tests\Structure
+ * @package SweetORM\Tests\Structure
  *
- * @coversDefaultClass \SweatORM\Structure\Indexer\EntityIndexer
+ * @coversDefaultClass \SweetORM\Structure\Indexer\EntityIndexer
  */
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     * @covers \SweatORM\Structure\Indexer\EntityIndexer
-     * @covers \SweatORM\Structure\Indexer\Indexer
-     * @covers \SweatORM\Structure\Indexer\TableIndexer
-     * @covers \SweatORM\Structure\Indexer\ColumnIndexer
-     * @covers \SweatORM\Structure\Indexer\RelationIndexer
-     * @covers \SweatORM\Structure\EntityStructure
+     * @covers \SweetORM\Structure\Indexer\EntityIndexer
+     * @covers \SweetORM\Structure\Indexer\Indexer
+     * @covers \SweetORM\Structure\Indexer\TableIndexer
+     * @covers \SweetORM\Structure\Indexer\ColumnIndexer
+     * @covers \SweetORM\Structure\Indexer\RelationIndexer
+     * @covers \SweetORM\Structure\EntityStructure
      */
     public function testEntityAnnotation()
     {
@@ -46,16 +46,16 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \SweatORM\EntityManager
-     * @covers \SweatORM\EntityManager::getInstance
-     * @covers \SweatORM\EntityManager::isRegistered
-     * @covers \SweatORM\EntityManager::registerEntity
-     * @covers \SweatORM\EntityManager::getEntityStructure
-     * @covers \SweatORM\Structure\EntityStructure
-     * @covers \SweatORM\Structure\Indexer\TableIndexer
-     * @covers \SweatORM\Structure\Indexer\EntityIndexer
-     * @covers \SweatORM\Structure\Indexer\ColumnIndexer
-     * @covers \SweatORM\Structure\Indexer\RelationIndexer
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\EntityManager::getInstance
+     * @covers \SweetORM\EntityManager::isRegistered
+     * @covers \SweetORM\EntityManager::registerEntity
+     * @covers \SweetORM\EntityManager::getEntityStructure
+     * @covers \SweetORM\Structure\EntityStructure
+     * @covers \SweetORM\Structure\Indexer\TableIndexer
+     * @covers \SweetORM\Structure\Indexer\EntityIndexer
+     * @covers \SweetORM\Structure\Indexer\ColumnIndexer
+     * @covers \SweetORM\Structure\Indexer\RelationIndexer
      */
     public function testRegisterEntity()
     {
@@ -73,7 +73,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($registered);
 
         $structure = $manager->getEntityStructure(Category::class);
-        $this->assertInstanceOf("\\SweatORM\\Structure\\EntityStructure", $structure);
+        $this->assertInstanceOf("\\SweetORM\\Structure\\EntityStructure", $structure);
         $this->assertEquals(Category::class, $structure->name);
         $this->assertEquals("category", $structure->tableName);
     }

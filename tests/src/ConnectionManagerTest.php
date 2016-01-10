@@ -6,16 +6,16 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Tests;
+namespace SweetORM\Tests;
 
-use SweatORM\Configuration;
-use SweatORM\ConnectionManager;
+use SweetORM\Configuration;
+use SweetORM\ConnectionManager;
 
 /**
  * Class ConnectionManagerTest
- * @package SweatORM\Tests
+ * @package SweetORM\Tests
  *
- * @coversDefaultClass \SweatORM\ConnectionManager
+ * @coversDefaultClass \SweetORM\ConnectionManager
  */
 class ConnectionManagerTest extends \PHPUnit_Framework_TestCase
 {

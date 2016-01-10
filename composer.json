@@ -1,9 +1,9 @@
 {
-  "name": "tomvlk/sweat-orm",
+  "name": "tomvlk/sweet-orm",
   "type": "library",
-  "description": "Simple and sweat ORM for PHP, using your already existing structure, no command line required!",
+  "description": "Simple ORM for PHP, using your already existing structure, no command line required!",
   "keywords": ["database", "orm", "objects", "entity"],
-  "homepage": "https://github.com/tomvlk/sweat-orm",
+  "homepage": "https://github.com/tomvlk/sweet-orm",
   "license": "MIT",
   "authors": [
     {
@@ -26,13 +26,13 @@
   },
   "autoload": {
     "psr-4": {
-      "SweatORM\\": "src/SweatORM"
+      "SweetORM\\": "src/SweetORM"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SweatORM\\Tests\\": "tests/src",
-      "SweatORM\\Tests\\Models\\": "tests/models"
+      "SweetORM\\Tests\\": "tests/src",
+      "SweetORM\\Tests\\Models\\": "tests/models"
     }
   },
   "archive": {

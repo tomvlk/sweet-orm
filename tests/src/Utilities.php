@@ -6,11 +6,11 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Tests;
+namespace SweetORM\Tests;
 
-use SweatORM\Configuration;
-use SweatORM\ConnectionManager;
-use SweatORM\Structure\RelationManager;
+use SweetORM\Configuration;
+use SweetORM\ConnectionManager;
+use SweetORM\Structure\RelationManager;
 
 class Utilities {
 
@@ -20,7 +20,7 @@ class Utilities {
             Configuration::set('database_driver',   'pdo_mysql');
             Configuration::set('database_host',     'localhost');
             Configuration::set('database_port',     3306);
-            Configuration::set('database_db',       'sweat_test');
+            Configuration::set('database_db',       'sweet_test');
             Configuration::set('database_user',     'root');
             Configuration::set('database_password', '');
         }
