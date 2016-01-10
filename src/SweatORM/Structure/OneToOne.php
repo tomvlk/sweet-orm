@@ -1,6 +1,6 @@
 <?php
 /**
- * OneToMany Relation
+ * OneToOne Relation
  *
  * @author     Tom Valk <tomvalk@lt-box.info>
  * @copyright  2016 Tom Valk
@@ -13,13 +13,13 @@ use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Enum;
 
 /**
- * One To Many relation
+ * One To One relation
  *
  * @package SweatORM\Structure
  *
  * @Annotation
  * @Target("PROPERTY")
  */
-class OneToMany extends Relation
+class OneToOne extends Relation
 {
 }

@@ -106,10 +106,10 @@ class EntityManager
 
         if ($entity->_saved) {
             // Update
-            return $query->update()->set(get_object_vars($entity))->where(array($structure->primaryColumn->name => $entity->_id))->apply();
+            return $query->update()->set($this->getEntityDataArray($entity))->where(array($structure->primaryColumn->name => $entity->_id))->apply();
         } else {
             // Insert
-            $id = $query->insert()->into($structure->tableName)->values(get_object_vars($entity))->apply();
+            $id = $query->insert()->into($structure->tableName)->values($this->getEntityDataArray($entity))->apply();
 
             if ($id === false) {
                 return false; // @codeCoverageIgnore
@@ -154,5 +154,29 @@ class EntityManager
         $column = self::getInstance()->getEntityStructure($entity)->primaryColumn;
         $query->where($column->name, $primaryValue);
         return $query->one();
+    }
+
+    /** ====== **/
+
+    /**
+     * Get entity column=>value array.
+     * @param Entity $entity
+     * @return array
+     */
+    private function getEntityDataArray($entity)
+    {
+        $data = array();
+
+        $structure = $this->getEntityStructure($entity);
+        $columns = $structure->columns;
+
+        foreach ($columns as $column) {
+            if (isset($entity->{$column->propertyName})) {
+                $data[$column->name] = $entity->{$column->propertyName};
+            } else {
+                $data[$column->name] = null;
+            }
+        }
+        return $data;
     }
 }

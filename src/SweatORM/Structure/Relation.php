@@ -32,4 +32,27 @@ abstract class Relation implements Annotation
      * @var string
      */
     public $fetch = 'LAZY';
+
+
+
+
+    /**
+     * Property in our Entity which holds the foreign key for the target Entity.
+     *
+     * @var string
+     */
+    public $property;
+
+    /**
+     * Property on the target entity which holds our primary key.
+     *
+     * @var string
+     */
+    public $targetProperty;
+
+    /**
+     * The Joining column name, only declare at the start of the relation.
+     * @var string
+     */
+    public $column;
 }

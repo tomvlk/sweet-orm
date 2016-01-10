@@ -11,5 +11,7 @@ require_once __DIR__ . '/Entity.php';
 require_once __DIR__ . '/Column.php';
 require_once __DIR__ . '/Table.php';
 
+require_once __DIR__ . '/OneToOne.php';
 require_once __DIR__ . '/OneToMany.php';
 require_once __DIR__ . '/ManyToOne.php';
+require_once __DIR__ . '/Join.php';

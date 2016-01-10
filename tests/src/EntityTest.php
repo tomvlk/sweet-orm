@@ -168,7 +168,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Make new post in category 1
         $post = new Post();
-        $post->category = 1;
+        $post->categoryid = 1;
 
         // Will not have all required columns filled for now, need to give an exception!
         try {
@@ -204,7 +204,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         Utilities::resetDatabase();
 
         $post = new Post();
-        $post->category = 1;
+        $post->categoryid = 1;
         $post->author = 1;
         $post->title = "Sample_Update_1";
         $post->content = "Sample Insert 1";

@@ -1,6 +1,6 @@
 <?php
 /**
- * OneToMany Relation
+ * Join in a Relation
  *
  * @author     Tom Valk <tomvalk@lt-box.info>
  * @copyright  2016 Tom Valk
@@ -13,13 +13,26 @@ use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Enum;
 
 /**
- * One To Many relation
+ * Join declaration
  *
  * @package SweatORM\Structure
  *
  * @Annotation
  * @Target("PROPERTY")
  */
-class OneToMany extends Relation
+class Join implements Annotation
 {
+    /**
+     * Local Column
+     * @var string
+     * @Required()
+     */
+    public $column;
+
+    /**
+     * Foreign key at the target side
+     * @var string
+     * @Required()
+     */
+    public $targetForeignColumn;
 }

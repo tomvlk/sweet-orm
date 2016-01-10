@@ -10,7 +10,9 @@ namespace SweatORM\Tests\Models;
 
 use SweatORM\Entity;
 use SweatORM\Structure\Column;
+use SweatORM\Structure\Join;
 use SweatORM\Structure\ManyToOne;
+use SweatORM\Structure\OneToMany;
 use SweatORM\Structure\Table;
 
 /**
@@ -36,8 +38,14 @@ class Post extends Entity
 
     /**
      * @var int
-     * @Column(type="integer")
-     * @ManyToOne(targetEntity="SweatORM\Tests\Models\Category")
+     * @Column(name="category", type="integer")
+     */
+    public $categoryid;
+
+    /**
+     * @var Category
+     * @OneToMany(targetEntity="SweatORM\Tests\Models\Category", targetProperty="posts")
+     * @Join(column="category", targetForeignColumn="id")
      */
     public $category;
 
