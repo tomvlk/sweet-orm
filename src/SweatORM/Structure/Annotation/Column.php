@@ -6,18 +6,19 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Structure;
+namespace SweatORM\Structure\Annotation;
 
 
 use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Enum;
+use SweatORM\Structure\BaseAnnotation;
 
 /**
  * @Annotation
  * @Target("PROPERTY")
  */
-class Column implements Annotation
+class Column implements BaseAnnotation
 {
     /**
      * @Required

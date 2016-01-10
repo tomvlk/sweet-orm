@@ -6,10 +6,11 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Structure;
+namespace SweatORM\Structure\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Annotations\Annotation\Required;
+use SweatORM\Structure\BaseAnnotation;
 
 /**
  * Class Relation
@@ -17,7 +18,7 @@ use Doctrine\Common\Annotations\Annotation\Required;
  *
  *
  */
-abstract class Relation implements Annotation
+abstract class Relation implements BaseAnnotation
 {
     /**
      * Full Entity class notation for the target Entity of the relationship.

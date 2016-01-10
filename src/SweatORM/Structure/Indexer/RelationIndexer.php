@@ -12,12 +12,11 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use SweatORM\Entity;
 use SweatORM\Exception\InvalidAnnotationException;
 use SweatORM\Exception\RelationException;
-use SweatORM\Structure\Column;
 use SweatORM\Structure\EntityStructure;
-use SweatORM\Structure\Join;
-use SweatORM\Structure\OneToMany;
-use SweatORM\Structure\OneToOne;
-use SweatORM\Structure\Relation;
+use SweatORM\Structure\Annotation\Join;
+use SweatORM\Structure\Annotation\OneToMany;
+use SweatORM\Structure\Annotation\OneToOne;
+use SweatORM\Structure\Annotation\Relation;
 
 /**
  * Relation Indexer

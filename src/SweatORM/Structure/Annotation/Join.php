@@ -6,11 +6,12 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Structure;
+namespace SweatORM\Structure\Annotation;
 
 use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Enum;
+use SweatORM\Structure\BaseAnnotation;
 
 /**
  * Join declaration
@@ -20,7 +21,7 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  * @Annotation
  * @Target("PROPERTY")
  */
-class Join implements Annotation
+class Join implements BaseAnnotation
 {
     /**
      * Local Column

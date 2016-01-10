@@ -7,6 +7,9 @@
  */
 
 namespace SweatORM\Structure;
+use SweatORM\Structure\Annotation\Column;
+use SweatORM\Structure\Annotation\Relation;
+use SweatORM\Structure\Annotation\Table;
 
 /**
  * Entity Database Structure

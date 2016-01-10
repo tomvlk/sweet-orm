@@ -6,15 +6,16 @@
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Structure;
+namespace SweatORM\Structure\Annotation;
 
 use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
 use Doctrine\Common\Annotations\Annotation\Target;
+use SweatORM\Structure\BaseAnnotation;
 
 /**
  * @Annotation
  * @Target("CLASS")
  */
-class Entity implements Annotation
+class Entity implements BaseAnnotation
 {
 }

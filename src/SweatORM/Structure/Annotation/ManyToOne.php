@@ -1,25 +1,25 @@
 <?php
 /**
- * OneToMany Relation
+ * ManyToOne Relation
  *
  * @author     Tom Valk <tomvalk@lt-box.info>
  * @copyright  2016 Tom Valk
  */
 
-namespace SweatORM\Structure;
+namespace SweatORM\Structure\Annotation;
 
 use Doctrine\Common\Annotations\Annotation as DoctrineAnnotation;
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Enum;
 
 /**
- * One To Many relation
+ * Many To One relation, mostly parent
  *
  * @package SweatORM\Structure
  *
  * @Annotation
  * @Target("PROPERTY")
  */
-class OneToMany extends Relation
+class ManyToOne extends Relation
 {
 }

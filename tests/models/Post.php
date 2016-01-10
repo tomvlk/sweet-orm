@@ -9,18 +9,18 @@
 namespace SweatORM\Tests\Models;
 
 use SweatORM\Entity;
-use SweatORM\Structure\Column;
-use SweatORM\Structure\Join;
-use SweatORM\Structure\ManyToOne;
-use SweatORM\Structure\OneToMany;
-use SweatORM\Structure\OneToOne;
-use SweatORM\Structure\Table;
+use SweatORM\Structure\Annotation\Column;
+use SweatORM\Structure\Annotation\Join;
+use SweatORM\Structure\Annotation\ManyToOne;
+use SweatORM\Structure\Annotation\OneToMany;
+use SweatORM\Structure\Annotation\OneToOne;
+use SweatORM\Structure\Annotation\Table;
 
 /**
  * Class Post
  * @package SweatORM\Tests\Models
  *
- * @\SweatORM\Structure\Entity
+ * @\SweatORM\Structure\Annotation\Entity
  * @Table(name="post")
  */
 class Post extends Entity

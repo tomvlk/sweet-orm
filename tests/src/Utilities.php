@@ -13,8 +13,6 @@ use SweatORM\ConnectionManager;
 
 class Utilities {
 
-    private static $dbKeywords = array('ALTER', 'CREATE', 'DELETE', 'DROP', 'INSERT', 'REPLACE', 'SELECT', 'SET', 'TRUNCATE', 'UPDATE', 'USE', 'DELIMITER', 'END');
-
     public static function injectDatabaseConfiguration($driver = 'pdo_mysql')
     {
         if ($driver == 'pdo_mysql') {

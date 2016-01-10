@@ -10,7 +10,7 @@ namespace SweatORM\Structure\Indexer;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use SweatORM\Exception\InvalidAnnotationException;
-use SweatORM\Structure\Column;
+use SweatORM\Structure\Annotation\Column;
 use SweatORM\Structure\EntityStructure;
 
 /**

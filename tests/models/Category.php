@@ -9,15 +9,15 @@
 namespace SweatORM\Tests\Models;
 
 use SweatORM\Entity;
-use SweatORM\Structure\OneToMany;
-use SweatORM\Structure\Table;
-use SweatORM\Structure\Column;
+use SweatORM\Structure\Annotation\OneToMany;
+use SweatORM\Structure\Annotation\Table;
+use SweatORM\Structure\Annotation\Column;
 
 /**
  * Class Category
  * @package SweatORM\Tests\Models
  *
- * @\SweatORM\Structure\Entity
+ * @\SweatORM\Structure\Annotation\Entity
  * @Table(name="category")
  */
 class Category extends Entity

@@ -7,11 +7,11 @@
  */
 
 
-require_once __DIR__ . '/Entity.php';
-require_once __DIR__ . '/Column.php';
-require_once __DIR__ . '/Table.php';
+require_once __DIR__ . '/Annotation/Entity.php';
+require_once __DIR__ . '/Annotation/Column.php';
+require_once __DIR__ . '/Annotation/Table.php';
 
-require_once __DIR__ . '/OneToOne.php';
-require_once __DIR__ . '/OneToMany.php';
-require_once __DIR__ . '/ManyToOne.php';
-require_once __DIR__ . '/Join.php';
+require_once __DIR__ . '/Annotation/OneToOne.php';
+require_once __DIR__ . '/Annotation/OneToMany.php';
+require_once __DIR__ . '/Annotation/ManyToOne.php';
+require_once __DIR__ . '/Annotation/Join.php';

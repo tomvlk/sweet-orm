@@ -8,11 +8,10 @@
 
 namespace SweatORM\Structure\Indexer;
 
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use SweatORM\Exception\InvalidAnnotationException;
 use SweatORM\Structure\EntityStructure;
-use SweatORM\Structure\Table;
+use SweatORM\Structure\Annotation\Table;
 
 class TableIndexer implements Indexer
 {
