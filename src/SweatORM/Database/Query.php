@@ -38,7 +38,7 @@ class Query
 
     /**
      * Hold last exception (chain)
-     * @var null|\Exception
+     * @var QueryException
      */
     private $exception = null;
 
@@ -345,6 +345,10 @@ class Query
      */
     public function limit($limit)
     {
+        if ($this->queryType !== self::QUERY_SELECT) {
+            $this->exception = new QueryException("Limit can only be applied on SELECT mode!", 0, $this->exception);
+            return $this;
+        }
         if (! is_int($limit) || $limit < 0) {
             $this->exception = new QueryException("Limit value should be an positive integer!", 0, $this->exception);
             return $this;
@@ -362,6 +366,10 @@ class Query
      */
     public function offset($offset)
     {
+        if ($this->queryType !== self::QUERY_SELECT) {
+            $this->exception = new QueryException("Offset can only be applied on SELECT mode!", 0, $this->exception);
+            return $this;
+        }
         if (! is_int($offset) || $offset < 0) {
             $this->exception = new QueryException("Offset value should be an positive integer!", 0, $this->exception);
             return $this;
@@ -380,6 +388,11 @@ class Query
      */
     public function sort($column, $type = 'ASC')
     {
+        if ($this->queryType !== self::QUERY_SELECT) {
+            $this->exception = new QueryException("Sorting can only be applied on SELECT mode!", 0, $this->exception);
+            return $this;
+        }
+
         // First lets upper the type.
         $type = strtoupper($type);
 
@@ -404,9 +417,8 @@ class Query
 
     /**
      * Execute Query and fetch all records as entities
-     *
-     * @return Entity[]|false Entities as successful result or false on not found.
-     * @throws \Exception|null
+     * @return false|\SweatORM\Entity[] Entities as successful result or false on not found.
+     * @throws QueryException
      */
     public function all()
     {
@@ -421,7 +433,7 @@ class Query
      * Execute Query and fetch a single record as entity
      *
      * @return Entity[]|false Entities as successful result or false on not found.
-     * @throws \Exception|null
+     * @throws QueryException
      */
     public function one()
     {
@@ -432,14 +444,40 @@ class Query
         return $this->fetch(false);
     }
 
+    /**
+     * Execute and apply changes, only for query mode INSERT and UPDATE!
+     *
+     * @throws QueryException
+     * @throws \Exception
+     *
+     * @return int|bool Inserted ID when inserting or true/false when updating
+     */
+    public function apply()
+    {
+        if ($this->exception !== null) {
+            throw $this->exception;
+        }
+
+        return $this->execute();
+    }
+
 
     /**
      * @param $multi
      * @return array|mixed
+     *
+     * @throws \Exception
      */
     private function fetch($multi)
     {
         // Let the generator do his work now,
+        if ($this->queryType !== self::QUERY_SELECT) {
+            throw new QueryException("Can only do all() or one() on SELECT mode!", 0, $this->exception);
+        }
+
+        $this->bindValues = array();
+        $this->bindTypes = array();
+
         // Where
         $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
 
@@ -479,6 +517,72 @@ class Query
     }
 
 
+    /**
+     * Execute the Query (used for INSERT and UPDATE)
+     *
+     * @throws QueryException
+     * @throws \Exception
+     * @return int|bool Inserted ID when inserting or true/false when updating
+     */
+    private function execute()
+    {
+        // Let the generator do his work now,
+        if ($this->queryType !== self::QUERY_INSERT && $this->queryType !== self::QUERY_UPDATE) {
+            throw new QueryException("Can only do apply() on INSERT and UPDATE mode!", 0, $this->exception);
+        }
+
+        // Validate all variables
+        if ($this->queryType === self::QUERY_INSERT) {
+            // We should have the table, all required data.
+            if (count($this->changeData) === 0 || empty($this->table)) {
+                throw new QueryException("When inserting you should at least give a table and the inserting data!", 0, $this->exception);
+            }
+        }
+        if ($this->queryType === self::QUERY_UPDATE) {
+            // We should have a where with at least one condition, data, and a table
+            if (count($this->whereConditions) === 0 || count($this->changeData) === 0 || empty($this->table)) {
+                throw new QueryException("When updating you should at least give a table, at least one where condition and the updating data!", 0, $this->exception);
+            }
+        }
+
+        $this->bindValues = array();
+        $this->bindTypes = array();
+
+        // Generate parts
+        if ($this->queryType === self::QUERY_INSERT) {
+            $this->generator->generateInsert($this->columnOrder, $this->changeData, $this->start, $this->data, $this->bindValues, $this->bindTypes);
+        }
+
+        if ($this->queryType === self::QUERY_UPDATE) {
+            //$this->generator->generateUpdate();
+        }
+
+
+        $this->query = "";
+        $this->combineQuery();
+
+        // Verify if bind has same number as the number of question marks in the query
+        // TODO: Implement this when stable
+        //$this->verifyQuery();
+
+        $connection = ConnectionManager::getConnection();
+        $query = $connection->prepare($this->query);
+
+        // Bind all values
+        $idx = 1;
+        foreach ($this->bindValues as $key => $value) {
+            $query->bindValue($idx, $value, $this->bindTypes[$key]);
+            $idx++;
+        }
+
+        // Execute
+        $status = $query->execute();
+
+        if ($status && $this->queryType === self::QUERY_INSERT) {
+            return $connection->lastInsertId();
+        }
+        return $status;
+    }
 
 
 
@@ -544,18 +648,33 @@ class Query
      */
     private function combineQuery()
     {
-        $this->query = "SELECT $this->start FROM $this->table";
+        if ($this->queryType === self::QUERY_SELECT) {
+            $this->query = "SELECT $this->start FROM $this->table";
 
-        if (! empty($this->where)) {
-            $this->query .= " WHERE $this->where";
+            if (! empty($this->where)) {
+                $this->query .= " WHERE $this->where";
+            }
+
+            if (! empty($this->order)) {
+                $this->query .= " ORDER BY $this->order";
+            }
+
+            if (! empty($this->limit)) {
+                $this->query .= " LIMIT $this->limit";
+            }
         }
 
-        if (! empty($this->order)) {
-            $this->query .= " ORDER BY $this->order";
+        if ($this->queryType === self::QUERY_INSERT) {
+            // The start will contain the column names () in order! Then the data will contain the value ()
+            $this->query = "INSERT INTO $this->table $this->start VALUES $this->data ;";
         }
 
-        if (! empty($this->limit)) {
-            $this->query .= " LIMIT $this->limit";
+        if ($this->queryType === self::QUERY_UPDATE) {
+            $this->query = "UPDATE $this->table SET $this->data";
+
+            if (! empty($this->where)) {
+                $this->query .= " WHERE $this->where";
+            }
         }
     }
 

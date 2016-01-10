@@ -9,6 +9,8 @@
 namespace SweatORM\Database;
 
 
+use SweatORM\Structure\Column;
+
 class QueryGenerator
 {
 
@@ -124,6 +126,54 @@ class QueryGenerator
         }
     }
 
+
+    /**
+     * Generate Insert parts
+     *
+     * @param Column[] $columnOrder
+     * @param array $changeData
+     * @param string $start Reference: COLUMN definition part
+     * @param string $data Reference: VALUES () part
+     * @param array $values Reference: binding values
+     * @param array $types Reference: binding types
+     */
+    public function generateInsert($columnOrder, $changeData, &$start, &$data, &$values, &$types)
+    {
+        // Prepare
+        $start = "(";
+        $data = "(";
+
+        // Generate the column definition
+        $idx = 0;
+        $max = count($columnOrder);
+        foreach ($columnOrder as $column) {
+            // Get value for column
+            $value = null;
+            if (isset($changeData[$column->name])) {
+                $value = $changeData[$column->name];
+            }
+
+            // Add to the definition line
+            $start .= "`".$column->name."`";
+
+            // Add to the values line
+            $data .= "?";
+            $values[] = $changeData[$column->name];
+            $types[] = $this->determinateType($changeData[$column->name]);
+
+            // Adding ,
+            if (($idx + 1) < $max) {
+                $start .= ",";
+                $data .= ",";
+            }
+
+            $idx++;
+        }
+
+        // Finish start and data
+        $start .= ")";
+        $data .= ")";
+    }
 
 
 

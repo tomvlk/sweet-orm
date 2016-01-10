@@ -103,7 +103,21 @@ class EntityManager
     {
         $query = new Query($entity, false);
         $structure = $this->getEntityStructure($entity);
-        $query->insert()->into();
+
+        if ($entity->_saved) {
+            // Update
+        } else {
+            $id = $query->insert()->into($structure->tableName)->values(get_object_vars($entity))->apply();
+
+            if ($id === false) {
+                return false;
+            }
+
+            // Save ID and state
+            $entity->{$structure->primaryColumn->propertyName} = $id;
+            $entity->_id = $id;
+            $entity->_saved = true;
+        }
 
         return true;
     }

@@ -23,7 +23,7 @@ abstract class Entity
     /**
      * @var int|string Primary Key value
      */
-    private $_id;
+    public $_id = null;
 
 
 

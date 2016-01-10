@@ -88,8 +88,31 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         }catch(QueryException $qe) {
             $this->assertTrue(true);
         }
-
-
+        try { // Invalid Mode
+            Category::find()->insert()->into()->sort('id')->apply();
+            $this->assertTrue(false);
+        }catch(QueryException $qe) {
+            $this->assertTrue(true);
+        }
+        try { // Invalid Mode
+            Category::find()->insert()->into()->limit(1)->apply();
+            $this->assertTrue(false);
+        }catch(QueryException $qe) {
+            $this->assertTrue(true);
+        }
+        try { // Invalid Mode
+            Category::find()->insert()->into()->offset(1)->apply();
+            $this->assertTrue(false);
+        }catch(QueryException $qe) {
+            $this->assertTrue(true);
+        }
+        try { // Invalid Mode
+            Category::find()->insert()->into()->one();
+            $this->assertTrue(false);
+        }catch(QueryException $qe) {
+            $this->assertTrue(true);
+        }
+        // END FAIL TESTS
 
 
         // Weird but good!
@@ -129,6 +152,42 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Category::class, $cat1);
         $this->assertInstanceOf(Category::class, $cat2);
         $this->assertFalse($catnone);
+    }
+
+
+
+    /**
+     * @covers \SweatORM\Entity
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Database\Query
+     * @covers \SweatORM\Database\QueryGenerator
+     */
+    public function testInserting()
+    {
+        // Make new post in category 1
+        $post = new Post();
+        $post->category = 1;
+
+        // Will not have all required columns filled for now, need to give an exception!
+        try {
+            $post->save();
+            $this->assertTrue(false);
+        } catch (QueryException $qe) {
+            $this->assertTrue(true);
+        }
+
+
+        // Now fill in the correct fields
+        $post->author = 1;
+        $post->title = "Sample_Insert_1";
+        $post->content = "Sample Insert Content";
+
+        // Try again, must succeed
+        $result = $post->save();
+
+        $this->assertTrue($result);
+        $this->assertEquals(11, $post->_id);
+        $this->assertEquals(11, $post->id);
     }
 
 
