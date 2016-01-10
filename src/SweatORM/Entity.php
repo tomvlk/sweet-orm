@@ -59,9 +59,23 @@ abstract class Entity
 
 
     /** ==== Entity Instance Operatios **/
+
+    /**
+     * Save Entity
+     * @return bool
+     */
     public function save()
     {
         return EntityManager::getInstance()->save($this);
+    }
+
+    /**
+     * Delete Entity
+     * @return bool
+     */
+    public function delete()
+    {
+        return EntityManager::getInstance()->delete($this);
     }
 
 

@@ -216,6 +216,22 @@ class EntityManager
     }
 
 
+    /**
+     * Delete entity from database
+     * @param Entity $entity
+     * @return bool
+     */
+    public function delete($entity)
+    {
+        $query = new Query($entity, false);
+        $structure = $this->getEntityStructure($entity);
+
+        if ($entity->_saved) {
+            return $query->delete($structure->tableName)->where(array($structure->primaryColumn->name => $entity->_id))->apply();
+        }
+        return false;
+    }
+
 
     /** ==== Entity Operation Functions, will apply on specific entities ==== **/
 

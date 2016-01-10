@@ -120,3 +120,50 @@ $categories = Category::find()->all();
 ```
 
 More information about the Query Builder will be available at the section [Query Building](#query-builder).
+
+## Saving
+Saving to the database is easy. To create a new instance of a entity, just create a new Entity object like this:
+
+#### Creating new Entity
+```php
+$category = new Category();
+```
+
+Then set all the properties:
+```php
+$category->name = "Samples";
+$category->description = "Sample posts";
+```
+
+And finally to save:
+```php
+$category->save(); // -> returns true or false, true on success, false on failure, will also throw exceptions.
+```
+
+
+#### Changing Entity
+To change an existing or fetched entity, just change the property value and use ```save()``` again.
+
+```php
+$category = Category::get(1);
+$category->name = "Samples - Old";
+$category->save(); // -> returns true or false.
+```
+
+
+
+#### Delete Entity
+To delete the entity from the database use the method ```delete()``` on the entity.
+
+```php
+$category = Category::get(1);
+
+// Delete
+$category->delete();
+```
+
+
+
+## Query Builder
+For finding the entity you could use the Query Builder. This will interactively build a SQL Query without knowing the exact syntax for the database.
+

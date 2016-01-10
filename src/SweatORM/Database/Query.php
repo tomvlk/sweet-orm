@@ -25,6 +25,7 @@ class Query
     const QUERY_SELECT = 1;
     const QUERY_INSERT = 2;
     const QUERY_UPDATE = 3;
+    const QUERY_DELETE = 4;
 
     /**
      * @var string
@@ -201,6 +202,24 @@ class Query
         return $this;
     }
 
+    /**
+     * Set mode to Delete
+     *
+     * @param string $table Table name
+     * @return Query $this
+     */
+    public function delete($table = "")
+    {
+        if (empty($table)) {
+            $table = $this->structure->tableName; // @codeCoverageIgnore
+        }
+
+        $this->table = $table;
+        $this->queryType = self::QUERY_DELETE;
+
+        return $this;
+    }
+
 
     /**
      * Set data for inserting or updating
@@ -290,7 +309,7 @@ class Query
     public function where($criteria, $operator = null, $value = null)
     {
         // Check if we are in select or update mode
-        if ($this->queryType !== self::QUERY_SELECT && $this->queryType !== self::QUERY_UPDATE) {
+        if ($this->queryType !== self::QUERY_SELECT && $this->queryType !== self::QUERY_UPDATE && $this->queryType !== self::QUERY_DELETE) {
             $this->exception = new QueryException("When doing a where() we must be in SELECT or UPDATE mode!", 0, $this->exception);
             return $this;
         }
@@ -537,7 +556,7 @@ class Query
     private function execute()
     {
         // Let the generator do his work now,
-        if ($this->queryType !== self::QUERY_INSERT && $this->queryType !== self::QUERY_UPDATE) {
+        if ($this->queryType !== self::QUERY_INSERT && $this->queryType !== self::QUERY_UPDATE && $this->queryType !== self::QUERY_DELETE) {
             throw new QueryException("Can only do apply() on INSERT and UPDATE mode!", 0, $this->exception); // @codeCoverageIgnore
         }
 
@@ -554,6 +573,12 @@ class Query
                 throw new QueryException("When updating you should at least give a table, at least one where condition and the updating data!", 0, $this->exception); // @codeCoverageIgnore
             }
         }
+        if ($this->queryType === self::QUERY_DELETE) {
+            // We should have a where and table
+            if (count($this->whereConditions) === 0 || empty($this->table)) {
+                throw new QueryException("When deleting you should at least give a table and at least one where condition!", 0, $this->exception); // @codeCoverageIgnore
+            }
+        }
 
         $this->bindValues = array();
         $this->bindTypes = array();
@@ -565,6 +590,10 @@ class Query
 
         if ($this->queryType === self::QUERY_UPDATE) {
             $this->generator->generateUpdate($this->changeData, $this->data, $this->bindValues, $this->bindTypes);
+            $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
+        }
+
+        if ($this->queryType === self::QUERY_DELETE) {
             $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
         }
 
@@ -681,6 +710,10 @@ class Query
             if (! empty($this->where)) {
                 $this->query .= " WHERE $this->where";
             }
+        }
+
+        if ($this->queryType === self::QUERY_DELETE) {
+            $this->query = "DELETE FROM $this->table WHERE $this->where";
         }
     }
 

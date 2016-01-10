@@ -223,6 +223,47 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Sample Update 1", $updated->content);
     }
 
+    /**
+     * @covers \SweatORM\Entity
+     * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Structure\RelationManager
+     * @covers \SweatORM\Database\Query
+     * @covers \SweatORM\Database\QueryGenerator
+     */
+    public function testDeleting()
+    {
+        Utilities::resetDatabase();
+
+        // Create test entity
+        $post = new Post();
+        $post->categoryid = 1;
+        $post->authorid = 1;
+        $post->title = "Sample_Update_1";
+        $post->content = "Sample Insert 1";
+
+        $status = $post->save();
+        $this->assertTrue($status);
+
+
+        $id = $post->id;
+        // Delete it
+
+        $status = $post->delete();
+        $this->assertTrue($status);
+
+        // Check if it exists
+        $post = Post::get($id);
+        $this->assertFalse($post);
+
+        // Trying to delete a non saved entity
+        $post = new Post();
+        $status = $post->delete();
+
+        $this->assertFalse($status);
+    }
+
+
+
 
     // Relation
     /**
