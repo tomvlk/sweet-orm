@@ -21,6 +21,10 @@ use SweatORM\Structure\EntityStructure;
  */
 class Query
 {
+    const QUERY_SELECT = 1;
+    const QUERY_INSERT = 2;
+    const QUERY_UPDATE = 3;
+
     /**
      * @var string
      */
@@ -44,9 +48,14 @@ class Query
      */
     private $query = "";
 
+    /**
+     * @var null|int One of the QUERY_* types
+     */
+    private $queryType = null;
+
     /* ===== Query Parts ===== */
-    private $select = "";
-    private $from = "";
+    private $start = "";
+    private $table = "";
     private $where = "";
     private $order = "";
     private $limit = "";
@@ -70,12 +79,19 @@ class Query
 
 
     /**
-     * Query Builder constructor
-     * @param $entityClass
+     * Query Builder constructor.
+     *
+     * @param string|Entity $entityClass
+     * @param bool $autoSelect Automaticly do the select and from based on the entity.
      * @throws ORMException
      */
-    public function __construct($entityClass)
+    public function __construct($entityClass, $autoSelect = true)
     {
+        if ($entityClass instanceof Entity) {
+            $reflection = new \ReflectionClass($entityClass); // @codeCoverageIgnore
+            $entityClass = $reflection->getName(); // @codeCoverageIgnore
+        }
+
         $this->class = $entityClass;
         $this->structure = EntityManager::getInstance()->getEntityStructure($entityClass);
         if ($this->structure === false) {
@@ -85,8 +101,10 @@ class Query
         $this->generator = new QueryGenerator();
 
         // Automaticly set select and from based on the structure of the Entity
-        $this->select("*");
-        $this->from($this->structure->tableName);
+        if ($autoSelect) {
+            $this->select("*");
+            $this->from($this->structure->tableName);
+        }
     }
 
 
@@ -97,7 +115,8 @@ class Query
      */
     public function select($columns = "*")
     {
-        $this->select = $columns;
+        $this->start = $columns;
+        $this->queryType = self::QUERY_SELECT;
         return $this;
     }
 
@@ -107,7 +126,35 @@ class Query
      */
     public function from($table)
     {
-        $this->from = $table;
+        $this->table = $table;
+        $this->queryType = self::QUERY_SELECT;
+        return $this;
+    }
+
+    /**
+     * Start insert mode
+     *
+     * @param string $table Table name
+     * @return Query $this
+     */
+    public function insert($table = "")
+    {
+        $this->start = "";
+        $this->queryType = self::QUERY_INSERT;
+        $this->into($table);
+        return $this;
+    }
+
+    /**
+     * Insert into table
+     *
+     * @param string $table
+     * @return Query $this
+     */
+    public function into($table)
+    {
+        $this->table = $table;
+        $this->queryType = self::QUERY_INSERT;
         return $this;
     }
 
@@ -390,7 +437,7 @@ class Query
      */
     private function combineQuery()
     {
-        $this->query = "SELECT $this->select FROM $this->from";
+        $this->query = "SELECT $this->start FROM $this->table";
 
         if (! empty($this->where)) {
             $this->query .= " WHERE $this->where";
