@@ -2,6 +2,7 @@
   "name": "tomvlk/sweat-orm",
   "type": "library",
   "description": "Simple and sweat ORM for PHP, using your already existing structure, no command line required!",
+  "keywords": ["database", "orm", "objects", "entity"],
   "homepage": "https://github.com/tomvlk/sweat-orm",
   "license": "MIT",
   "authors": [
