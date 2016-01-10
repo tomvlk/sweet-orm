@@ -155,7 +155,7 @@ class RelationManager
 
         // Can only set OneToOne and ManyToOne
         if (! $relation instanceof OneToOne && ! $relation instanceof ManyToOne) {
-            throw new RelationException("Only relations OneToOne and ManyToOne could be set!");
+            throw new RelationException("Only relations OneToOne and ManyToOne could be set!"); // @codeCoverageIgnore
         }
 
         // If NULL then set null into the entity id column (fk)

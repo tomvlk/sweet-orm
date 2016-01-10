@@ -102,7 +102,7 @@ class EntityManager
         if ($entityClassName instanceof Entity) {
             $reflection = new \ReflectionClass($entityClassName); // @codeCoverageIgnore
             $entityClassName = $reflection->getName(); // @codeCoverageIgnore
-        }
+        } // @codeCoverageIgnore
 
         return isset($this->entities[$entityClassName]);
     }
