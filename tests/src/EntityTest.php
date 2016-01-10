@@ -229,8 +229,11 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \SweatORM\Entity
      * @covers \SweatORM\EntityManager
+     * @covers \SweatORM\Structure\RelationManager
      * @covers \SweatORM\Database\Query
      * @covers \SweatORM\Database\QueryGenerator
+     * @covers \SweatORM\Database\Solver
+     * @covers \SweatORM\Database\Solver\OneToOne
      */
     public function testOneToOneRelation()
     {
@@ -254,7 +257,12 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         }
 
         // Get property 'category'.
-        var_dump($post->category);
+        $category = $post->category;
+        $this->assertInstanceOf(Category::class, $category);
+
+        // Lazy loading should cache it. We can see it working when checking the coverage reports.
+        $category = $post->category;
+        $this->assertInstanceOf(Category::class, $category);
     }
 
 

@@ -13,6 +13,7 @@ use SweatORM\Database\Query;
 use SweatORM\Exception\RelationException;
 use SweatORM\Structure\EntityStructure;
 use SweatORM\Structure\Indexer\EntityIndexer;
+use SweatORM\Structure\RelationManager;
 
 class EntityManager
 {
@@ -21,9 +22,6 @@ class EntityManager
 
     /** @var EntityStructure[] Structures */
     private $entities = array();
-
-    /** @var array<string, array> Lazy Loading results */
-    private $lazy = array();
 
     /**
      * Get entity manager
@@ -154,7 +152,7 @@ class EntityManager
             throw new RelationException("Property '".$name."' is not a valid and declared property, or relation property!");
         }
 
-        var_dump($name);
+        return RelationManager::with($entity)->fetch($name);
     }
 
 
