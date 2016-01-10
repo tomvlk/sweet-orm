@@ -35,7 +35,7 @@ class EntityManager
 
     /**
      * Register and index Entity class
-     * @param $entityClassName
+     * @param string|Entity $entityClassName
      */
     public function registerEntity($entityClassName)
     {
@@ -47,11 +47,16 @@ class EntityManager
 
     /**
      * Is the entity already registered?
-     * @param string $entityClassName
+     * @param string|Entity $entityClassName
      * @return bool
      */
     public function isRegistered($entityClassName)
     {
+        if ($entityClassName instanceof Entity) {
+            $reflection = new \ReflectionClass($entityClassName);
+            $entityClassName = $reflection->getName();
+        }
+
         return isset($this->entities[$entityClassName]);
     }
 
@@ -67,11 +72,16 @@ class EntityManager
     /**
      * Get entity structure class for using metadata
      *
-     * @param string $entityClassName
+     * @param string|Entity $entityClassName
      * @return EntityStructure|false
      */
     public function getEntityStructure($entityClassName)
     {
+        if ($entityClassName instanceof Entity) {
+            $reflection = new \ReflectionClass($entityClassName);
+            $entityClassName = $reflection->getName();
+        }
+
         if (! $this->isRegistered($entityClassName)) {
             $this->registerEntity($entityClassName);
         }
@@ -79,6 +89,24 @@ class EntityManager
     }
 
 
+
+    /** ==== Entity Instance Operations **/
+
+    /**
+     * Save Entity (will insert or update)
+     *
+     * @param Entity $entity
+     *
+     * @return bool status of save
+     */
+    public function save($entity)
+    {
+        $query = new Query($entity, false);
+        $structure = $this->getEntityStructure($entity);
+        $query->insert()->into();
+
+        return true;
+    }
 
 
 

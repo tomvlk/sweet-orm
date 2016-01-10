@@ -55,7 +55,7 @@ class EntityIndexer
 
     /**
      * Entity Indexer
-     * @param string $entityClassName
+     * @param string|Entity $entityClassName
      *
      * @throws InvalidAnnotationException Invalid annotations used
      */
