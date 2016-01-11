@@ -7,7 +7,7 @@
  */
 
 
-require_once __DIR__ . '/Annotation/Entity.php';
+require_once __DIR__ . '/Annotation/EntityClass.php';
 require_once __DIR__ . '/Annotation/Column.php';
 require_once __DIR__ . '/Annotation/Table.php';
 
@@ -16,3 +16,5 @@ require_once __DIR__ . '/Annotation/OneToMany.php';
 require_once __DIR__ . '/Annotation/ManyToOne.php';
 require_once __DIR__ . '/Annotation/ManyToMany.php';
 require_once __DIR__ . '/Annotation/Join.php';
+require_once __DIR__ . '/Annotation/JoinTable.php';
+require_once __DIR__ . '/Annotation/JoinColumn.php';

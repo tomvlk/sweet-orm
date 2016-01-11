@@ -16,6 +16,6 @@ use SweetORM\Structure\BaseAnnotation;
  * @Annotation
  * @Target("CLASS")
  */
-class Entity implements BaseAnnotation
+class EntityClass implements BaseAnnotation
 {
 }

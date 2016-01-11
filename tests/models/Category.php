@@ -9,6 +9,7 @@
 namespace SweetORM\Tests\Models;
 
 use SweetORM\Entity;
+use SweetORM\Structure\Annotation\EntityClass;
 use SweetORM\Structure\Annotation\Join;
 use SweetORM\Structure\Annotation\OneToMany;
 use SweetORM\Structure\Annotation\Table;
@@ -18,7 +19,7 @@ use SweetORM\Structure\Annotation\Column;
  * Class Category
  * @package SweetORM\Tests\Models
  *
- * @\SweetORM\Structure\Annotation\Entity
+ * @EntityClass()
  * @Table(name="category")
  */
 class Category extends Entity

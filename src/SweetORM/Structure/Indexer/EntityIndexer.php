@@ -10,7 +10,7 @@ namespace SweetORM\Structure\Indexer;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use SweetORM\Exception\InvalidAnnotationException;
-use SweetORM\Structure\Annotation\Entity;
+use SweetORM\Structure\Annotation\EntityClass;
 use SweetORM\Structure\EntityStructure;
 
 /**
@@ -39,7 +39,7 @@ class EntityIndexer
 
     /**
      * Entity Annotation Classs Instance
-     * @var Entity|null
+     * @var EntityClass|null
      */
     private $entityAnnotation;
 
@@ -51,7 +51,7 @@ class EntityIndexer
 
     /**
      * Entity Indexer
-     * @param string|Entity $entityClassName
+     * @param string|EntityClass $entityClassName
      *
      * @throws InvalidAnnotationException Invalid annotations used
      */
@@ -70,10 +70,10 @@ class EntityIndexer
         $reader = new AnnotationReader();
 
         $this->classAnnotations = $reader->getClassAnnotations($this->entityClass);
-        $this->entityAnnotation = $reader->getClassAnnotation($this->entityClass, Entity::class);
+        $this->entityAnnotation = $reader->getClassAnnotation($this->entityClass, EntityClass::class);
 
         // Validate Entity annotation
-        if ($this->entityAnnotation === null || ! $this->entityAnnotation instanceof Entity) {
+        if ($this->entityAnnotation === null || ! $this->entityAnnotation instanceof EntityClass) {
             throw new InvalidAnnotationException("Entity '".$this->entityClass->getName()."' should use Annotations to use it! Please look at the documentation for help."); // @codeCoverageIgnore
         }
 
