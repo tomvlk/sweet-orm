@@ -14,4 +14,5 @@ require_once __DIR__ . '/Annotation/Table.php';
 require_once __DIR__ . '/Annotation/OneToOne.php';
 require_once __DIR__ . '/Annotation/OneToMany.php';
 require_once __DIR__ . '/Annotation/ManyToOne.php';
+require_once __DIR__ . '/Annotation/ManyToMany.php';
 require_once __DIR__ . '/Annotation/Join.php';
