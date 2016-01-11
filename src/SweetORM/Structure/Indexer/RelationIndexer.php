@@ -163,8 +163,8 @@ class RelationIndexer implements Indexer
         $reflection = null;
         try {
             $reflection = new \ReflectionClass($to);
-        }catch(\Exception $e) {
-            // Ignore, we will throw error on the next if.
+        }catch(\Exception $e) { // @codeCoverageIgnore
+            // Ignore, we will throw error on the next if. // @codeCoverageIgnore
         }
         if ($reflection === null || ! $reflection->isSubclassOf(Entity::class)) {
             throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore

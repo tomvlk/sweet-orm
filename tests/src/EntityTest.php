@@ -12,6 +12,7 @@ use SweetORM\ConnectionManager;
 use SweetORM\Exception\QueryException;
 use SweetORM\Exception\RelationException;
 use SweetORM\Tests\Models\Category;
+use SweetORM\Tests\Models\Course;
 use SweetORM\Tests\Models\Post;
 use SweetORM\Tests\Models\Student;
 
@@ -38,7 +39,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Find All
         $all = Category::find()->all();
-        $this->assertEquals(4, count($all));
+        $this->assertCount(4, $all);
         foreach($all as $single) {
             $this->assertInstanceOf(Category::class, $single);
         }
@@ -119,20 +120,20 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Weird but good!
         $all = Category::find()->where('id', 'IS NOT', null)->where('id', '!=', false)->all();
-        $this->assertEquals(4, count($all));
+        $this->assertCount(4, $all);
 
         // Sorting
         $all = Category::find()->sort('description')->all();
-        $this->assertEquals(4, count($all));
+        $this->assertCount(4, $all);
 
         // Where IN
         $all = Category::find()->where('id', 'IN', array(1,2))->all();
-        $this->assertEquals(2, count($all));
+        $this->assertCount(2, $all);
 
 
         // Test with valid where, limit and offset in one
         $posts = Post::find()->where(array('categoryid' => '1'))->sort("title", "ASC")->limit(2)->offset(2)->all();
-        $this->assertEquals(2, count($posts));
+        $this->assertCount(2, $posts);
         $this->assertEquals("Sample News #3", $posts[0]->title);
         $this->assertEquals("Sample News #4", $posts[1]->title);
     }
@@ -326,7 +327,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Get posts
         $posts = $cat->posts;
-        $this->assertEquals(4, count($posts));
+        $this->assertCount(4, $posts);
 
         // The lazy category of the post should be exactly the same as the one we had fetched before!
         foreach($posts as $post) {
@@ -336,7 +337,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         // Get posts again (testing cache)
         $posts = $cat->posts;
 
-        $this->assertEquals(4, count($posts));
+        $this->assertCount(4, $posts);
     }
 
 
@@ -344,16 +345,46 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      * @covers \SweetORM\Entity
      * @covers \SweetORM\EntityManager
      * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Structure\Indexer\RelationIndexer::manyToMany
      * @covers \SweetORM\Database\Query
      * @covers \SweetORM\Database\QueryGenerator
      * @covers \SweetORM\Database\Solver
-     * @covers \SweetORM\Database\Solver\OneToOne
+     * @covers \SweetORM\Database\Solver\ManyToMany
      */
     public function testManyToMany()
     {
         Utilities::resetDatabase();
 
+        // Get student
+        /** @var Student $student */
+        $student = Student::get(1); // Will have course 1 and 2 in the db.
 
+        $courses = $student->courses;
+
+        $this->assertCount(2, $courses);
+        $this->assertEquals(1, $courses[0]->id);
+        $this->assertEquals(2, $courses[1]->id);
+
+        // Cache testing
+        $courses = $student->courses;
+
+        $this->assertCount(2, $courses);
+        $this->assertEquals(1, $courses[0]->id);
+        $this->assertEquals(2, $courses[1]->id);
+
+
+
+        // Reverse
+
+        /** @var Course $course */
+        $course = Course::get(1);
+
+        $students = $course->students;
+        $this->assertCount(7, $students);
+
+        // Cache test
+        $students = $course->students;
+        $this->assertCount(7, $students);
     }
 
 
@@ -400,13 +431,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         try{ // Wrong type and not null
             $post->category = false;
-            $this->assertTrue(false);
-        }catch(RelationException $re) {
-            $this->assertTrue(true);
-        }
-
-        try{ // Wrong property
-            $post->asasdf = false;
             $this->assertTrue(false);
         }catch(RelationException $re) {
             $this->assertTrue(true);

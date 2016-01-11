@@ -12,6 +12,8 @@ use SweetORM\Database\Solver;
 use SweetORM\Entity;
 use SweetORM\EntityManager;
 use SweetORM\Exception\RelationException;
+use SweetORM\Structure\Annotation\Join;
+use SweetORM\Structure\Annotation\JoinTable;
 use SweetORM\Structure\Annotation\ManyToOne;
 use SweetORM\Structure\Annotation\OneToOne;
 use SweetORM\Structure\Annotation\Relation;
@@ -96,12 +98,27 @@ class RelationManager
             throw new RelationException("Relation indexing failed, something is really wrong, please report! Fetch proprty no instance of relation!"); // @codeCoverageIgnore
         }
 
-        if (! isset($this->entity->{$relation->join->column})) {
+        // Property existing check
+        if ($relation->join instanceof Join && ! isset($this->entity->{$relation->join->column})) {
+            throw new \Exception("Property is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
+        }
+        if ($relation->join instanceof JoinTable && ! isset($this->entity->{$relation->join->column->entityColumn})) {
             throw new \Exception("Property is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
         }
 
+        // Our fk
+        $search = null;
+        if ($relation->join instanceof JoinTable) {
+            $search = $this->entity->{$relation->join->column->entityColumn};
+        }
+        if ($relation->join instanceof Join) {
+            $search = $this->entity->{$relation->join->column};
+        }
+        if ($search === null) {
+            throw new \Exception("Join should be a @Join or a @JoinTable (only for many to many)!"); // @codeCoverageIgnore
+        }
+
         // Check if we have it in our cache
-        $search = $this->entity->{$relation->join->column};
         if (isset( self::$lazy[get_class($this->entity)] [$virtualProperty] [$search] )) {
             return self::$lazy[get_class($this->entity)] [$virtualProperty] [$search];
         }

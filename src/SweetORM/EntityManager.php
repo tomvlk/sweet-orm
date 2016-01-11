@@ -8,7 +8,6 @@
 
 namespace SweetORM;
 
-
 use SweetORM\Database\Query;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\Annotation\JoinTable;
@@ -126,7 +125,7 @@ class EntityManager
         // Check for existing
         if (isset($this->joinTables[$joinTable->name])) {
             // Ignore. We already have it, lets hope the user knows what he is doing!
-            return;
+            return; // @codeCoverageIgnore
         }
 
         // Add and make sure we don't have duplicates
@@ -138,6 +137,8 @@ class EntityManager
      *
      * @param string $name Table name to search for.
      * @return null|JoinTable
+     *
+     * @codeCoverageIgnore Will be ignored for now as it isn't used yet.
      */
     public function getJoinTable($name)
     {
@@ -206,9 +207,9 @@ class EntityManager
      */
     public function setLazy($entity, $name, $value)
     {
-        // Verify if virtual property exists
+        // Verify if virtual property exists, if not then just don't set it!
         if (! in_array($name, $this->getEntityStructure($entity)->relationProperties)) {
-            throw new RelationException("Property '".$name."' is not a valid and declared property, or relation property!");
+            return;
         }
 
         // Verify if value is also an entity!
@@ -283,6 +284,17 @@ class EntityManager
      * @return Query
      */
     public static function find($entity)
+    {
+        return new Query($entity);
+    }
+
+    /**
+     * Start a query
+     *
+     * @param $entity
+     * @return Query
+     */
+    public static function query($entity)
     {
         return new Query($entity);
     }

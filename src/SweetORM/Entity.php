@@ -7,6 +7,7 @@
  */
 
 namespace SweetORM;
+use SweetORM\Database\Query;
 use SweetORM\Exception\RelationException;
 
 /**
@@ -84,10 +85,20 @@ abstract class Entity
 
     /**
      * Start Query for finding specific Entities.
+     * @return Query
      */
     public static function find()
     {
         return EntityManager::getInstance()->find(static::class);
+    }
+
+    /**
+     * Start query building
+     * @return Query
+     */
+    public static function query()
+    {
+        return EntityManager::getInstance()->query(static::class);
     }
 
     /**

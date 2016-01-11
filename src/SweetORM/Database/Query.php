@@ -27,6 +27,8 @@ class Query
     const QUERY_UPDATE = 3;
     const QUERY_DELETE = 4;
 
+    const QUERY_CUSTOM = 10;
+
     /**
      * @var string
      */
@@ -219,6 +221,67 @@ class Query
 
         return $this;
     }
+
+
+    /**
+     * Execute custom query.
+     *
+     * @param string $sql
+     * @param array $bind
+     *
+     * @throws QueryException
+     * @throws \PDOException
+     *
+     * @return Entity[]
+     */
+    public function custom($sql, $bind = array())
+    {
+        // Prepare query
+        $query = ConnectionManager::getConnection()->prepare($sql);
+
+        // Bind when needed
+        if (count($bind) > 0) {
+            $numericBinding = true;
+
+            // Check if we are going to use the numeric binding
+            foreach($bind as $key => $value) {
+                if (is_int($key)) {
+                    continue;
+                }else{
+                    $numericBinding = false;
+                    if (substr($key, 0, 1) !== ':') {
+                        throw new QueryException("When binding, you should use numeric keys or keys with : before each key to identify the binding place in the query!");
+                    }
+                }
+            }
+
+            // Bind it!
+            $idx = 1;
+            foreach($bind as $key => $value) {
+                if ($numericBinding) {
+                    $query->bindValue($idx, $value, is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR); // TODO: Better type detection..
+                } else {
+                    $query->bindValue($key, $value);
+                }
+            }
+        }
+
+        // Set fetch mode
+        $query->setFetchMode(\PDO::FETCH_CLASS, $this->class);
+
+        // Execute
+        $query->execute();
+
+        // Fetch and return
+        return $this->injectState($query->fetchAll());
+    }
+
+
+
+
+
+
+
 
 
     /**

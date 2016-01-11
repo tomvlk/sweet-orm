@@ -11,6 +11,8 @@ namespace SweetORM\Tests\Models;
 use SweetORM\Entity;
 use SweetORM\Structure\Annotation\Column;
 use SweetORM\Structure\Annotation\EntityClass;
+use SweetORM\Structure\Annotation\JoinColumn;
+use SweetORM\Structure\Annotation\JoinTable;
 use SweetORM\Structure\Annotation\ManyToMany;
 use SweetORM\Structure\Annotation\Table;
 
@@ -43,7 +45,11 @@ class Course extends Entity
 
     /**
      * @var Student[]
-     *
+     * @ManyToMany(targetEntity="SweetORM\Tests\Models\Student")
+     * @JoinTable(name="student_courses",
+     *     column=       @JoinColumn(name="course_id", entityColumn="id"),
+     *     targetColumn= @JoinColumn(name="student_id", entityColumn="id")
+     * )
      */
     public $students;
 }
