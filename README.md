@@ -28,9 +28,8 @@ When you don't have a PDO connection you need to setup the configuration of your
 Entities are PHP class declarations made up on your database table structure. You need to extend the abstract Entity in SweetORM and use the Annotations available in SweetORM.
 
 ```php
-use SweetORM\Entity;
 /**
- * @\SweetORM\Structure\Annotation\Entity
+ * @EntityClass
  * @Table(name="post")     <== The table has an attribute called 'name', which contains the table name in your database.
  */
 class Post extends \SweetORM\Entity // Make sure you extend the SweetORM\Entity!
@@ -67,9 +66,8 @@ class Post extends \SweetORM\Entity // Make sure you extend the SweetORM\Entity!
 Other example, defining the Category entity:
 
 ```php
-
 /**
- * @\SweetORM\Structure\Annotation\Entity
+ * @EntityClass
  * @Table(name="category")
  */
 class Category extends \SweetORM\Entity
@@ -96,7 +94,6 @@ class Category extends \SweetORM\Entity
     public $posts;  // Will be available, and fetched when you refer to it using lazy loading.
 }
 ```
-
 
 
 ## Reading from database
