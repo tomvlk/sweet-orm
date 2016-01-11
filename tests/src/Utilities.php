@@ -43,6 +43,15 @@ class Utilities {
         $connection->exec(/** @lang MySQL */
             "TRUNCATE TABLE category;");
 
+        $connection->exec(/** @lang MySQL */
+            "TRUNCATE TABLE student;");
+
+        $connection->exec(/** @lang MySQL */
+            "TRUNCATE TABLE course;");
+
+        $connection->exec(/** @lang MySQL */
+            "TRUNCATE TABLE student_courses;");
+
         // Fill the test data
         $category = array(
             array('id' => '1','name' => 'News','description' => 'Site news.'),
