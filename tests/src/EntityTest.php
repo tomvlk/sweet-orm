@@ -351,7 +351,9 @@ class EntityTest extends \PHPUnit_Framework_TestCase
      */
     public function testManyToMany()
     {
-        $all = Student::find()->all();
+        Utilities::resetDatabase();
+
+
     }
 
 
