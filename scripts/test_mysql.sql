@@ -33,3 +33,41 @@ ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `post`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+
+DROP TABLE IF EXISTS `student`;
+CREATE TABLE IF NOT EXISTS `student` (
+  `id` INT(11) NOT NULL,
+  `name` VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `student`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `student`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+DROP TABLE IF EXISTS `course`;
+CREATE TABLE IF NOT EXISTS `course` (
+  `id` INT(11) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ALTER TABLE `course`
+  ADD PRIMARY KEY (`id`);
+ALTER TABLE `course`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+
+DROP TABLE IF EXISTS `student_courses`;
+CREATE TABLE IF NOT EXISTS `student_courses` (
+  `student_id` int(11) NOT NULL,
+  `course_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+ALTER TABLE `student_courses`
+  ADD PRIMARY KEY (`student_id`,`course_id`);

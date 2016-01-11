@@ -32,14 +32,14 @@ class JoinTable implements BaseAnnotation
 
     /**
      * Fill in the join column for the current local entity column.
-     * @var JoinColumn
+     * @var \SweetORM\Structure\Annotation\JoinColumn
      */
     public $column;
 
 
     /**
      * Fill in the join column for the target entity column
-     * @var JoinColumn
+     * @var \SweetORM\Structure\Annotation\JoinColumn
      */
     public $targetColumn;
 

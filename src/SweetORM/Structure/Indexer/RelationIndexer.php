@@ -82,7 +82,6 @@ class RelationIndexer implements Indexer
         }
     }
 
-
     /**
      * @param EntityStructure $structure
      * @param \ReflectionProperty $property
@@ -96,8 +95,13 @@ class RelationIndexer implements Indexer
         $from = $structure->name;
         $to = $relation->targetEntity;
 
-        $reflection = new \ReflectionClass($to);
-        if (! $reflection->isSubclassOf(Entity::class)) {
+        $reflection = null;
+        try {
+            $reflection = new \ReflectionClass($to);
+        }catch(\Exception $e) {
+            // Ignore, we will throw error on the next if.
+        }
+        if ($reflection === null || ! $reflection->isSubclassOf(Entity::class)) {
             throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore
         }
 
@@ -124,8 +128,13 @@ class RelationIndexer implements Indexer
         $from = $structure->name;
         $to = $relation->targetEntity;
 
-        $reflection = new \ReflectionClass($to);
-        if (! $reflection->isSubclassOf(Entity::class)) {
+        $reflection = null;
+        try {
+            $reflection = new \ReflectionClass($to);
+        }catch(\Exception $e) {
+            // Ignore, we will throw error on the next if.
+        }
+        if ($reflection === null || ! $reflection->isSubclassOf(Entity::class)) {
             throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore
         }
 
@@ -151,8 +160,13 @@ class RelationIndexer implements Indexer
         $from = $structure->name;
         $to = $relation->targetEntity;
 
-        $reflection = new \ReflectionClass($to);
-        if (! $reflection->isSubclassOf(Entity::class)) {
+        $reflection = null;
+        try {
+            $reflection = new \ReflectionClass($to);
+        }catch(\Exception $e) {
+            // Ignore, we will throw error on the next if.
+        }
+        if ($reflection === null || ! $reflection->isSubclassOf(Entity::class)) {
             throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore
         }
 

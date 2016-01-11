@@ -13,6 +13,7 @@ use SweetORM\Exception\QueryException;
 use SweetORM\Exception\RelationException;
 use SweetORM\Tests\Models\Category;
 use SweetORM\Tests\Models\Post;
+use SweetORM\Tests\Models\Student;
 
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
@@ -337,6 +338,22 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(4, count($posts));
     }
+
+
+    /**
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\OneToOne
+     */
+    public function testManyToMany()
+    {
+        $all = Student::find()->all();
+    }
+
 
 
     /**
