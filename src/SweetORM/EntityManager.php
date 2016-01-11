@@ -11,6 +11,7 @@ namespace SweetORM;
 
 use SweetORM\Database\Query;
 use SweetORM\Exception\RelationException;
+use SweetORM\Structure\Annotation\JoinTable;
 use SweetORM\Structure\EntityStructure;
 use SweetORM\Structure\Indexer\EntityIndexer;
 use SweetORM\Structure\RelationManager;
@@ -20,8 +21,11 @@ class EntityManager
     /** @var EntityManager */
     private static $instance;
 
-    /** @var EntityStructure[] Structures */
+    /** @var EntityStructure[] $entities Structures */
     private $entities = array();
+
+    /** @var JoinTable[] $joinTables Join Tables storage */
+    private $joinTables = array();
 
     /**
      * Get entity manager
@@ -105,6 +109,42 @@ class EntityManager
         } // @codeCoverageIgnore
 
         return isset($this->entities[$entityClassName]);
+    }
+
+    /**
+     * Register a join table. Don't use this directly!
+     *
+     * @param JoinTable $joinTable
+     * @throws RelationException
+     */
+    public function registerJoinTable($joinTable)
+    {
+        if (! $joinTable instanceof JoinTable) {
+            throw new RelationException("Join Table register failure!"); // @codeCoverageIgnore
+        }
+
+        // Check for existing
+        if (isset($this->joinTables[$joinTable->name])) {
+            // Ignore. We already have it, lets hope the user knows what he is doing!
+            return;
+        }
+
+        // Add and make sure we don't have duplicates
+        $this->joinTables[$joinTable->name] = $joinTable;
+    }
+
+    /**
+     * Get the join table for the table name.
+     *
+     * @param string $name Table name to search for.
+     * @return null|JoinTable
+     */
+    public function getJoinTable($name)
+    {
+        if (isset($this->joinTables[$name])) {
+            return $this->joinTables[$name];
+        }
+        return null;
     }
 
     /**

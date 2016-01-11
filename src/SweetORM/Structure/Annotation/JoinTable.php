@@ -43,4 +43,16 @@ class JoinTable implements BaseAnnotation
      */
     public $targetColumn;
 
+
+    /**
+     * Dont fill this in!
+     * @var string
+     */
+    public $sourceEntityName;
+
+    /**
+     * Dont fill this in!
+     * @var string
+     */
+    public $targetEntityName;
 }

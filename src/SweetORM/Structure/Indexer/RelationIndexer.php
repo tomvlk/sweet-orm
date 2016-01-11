@@ -10,8 +10,12 @@ namespace SweetORM\Structure\Indexer;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use SweetORM\Entity;
+use SweetORM\EntityManager;
 use SweetORM\Exception\InvalidAnnotationException;
 use SweetORM\Exception\RelationException;
+use SweetORM\Structure\Annotation\JoinColumn;
+use SweetORM\Structure\Annotation\JoinTable;
+use SweetORM\Structure\Annotation\ManyToMany;
 use SweetORM\Structure\Annotation\ManyToOne;
 use SweetORM\Structure\EntityStructure;
 use SweetORM\Structure\Annotation\Join;
@@ -71,6 +75,9 @@ class RelationIndexer implements Indexer
                 if ($relationType === OneToMany::class) {
                     $this->oneToMany($structure, $property, $relation);
                 }
+                if ($relationType === ManyToMany::class) {
+                    $this->manyToMany($structure, $property, $relation);
+                }
             }
         }
     }
@@ -80,6 +87,7 @@ class RelationIndexer implements Indexer
      * @param EntityStructure $structure
      * @param \ReflectionProperty $property
      * @param OneToOne|Relation $relation
+     *
      * @throws RelationException Class not correct, no target property found or not extending Entity.
      * @throws \ReflectionException Class not found
      */
@@ -107,6 +115,7 @@ class RelationIndexer implements Indexer
      * @param EntityStructure $structure
      * @param \ReflectionProperty $property
      * @param OneToMany|Relation $relation
+     *
      * @throws RelationException Class not correct, no target property found or not extending Entity.
      * @throws \ReflectionException Class not found
      */
@@ -130,21 +139,62 @@ class RelationIndexer implements Indexer
     }
 
     /**
-     * Get Join
+     * @param EntityStructure $structure
+     * @param \ReflectionProperty $property
+     * @param ManyToMany|Relation $relation
+     *
+     * @throws RelationException Class not correct, no target property found or not extending Entity.
+     * @throws \ReflectionException Class not found
+     */
+    private function manyToMany(&$structure, $property, $relation)
+    {
+        $from = $structure->name;
+        $to = $relation->targetEntity;
+
+        $reflection = new \ReflectionClass($to);
+        if (! $reflection->isSubclassOf(Entity::class)) {
+            throw new RelationException("The target entity of your relation on the entity '".$from."' and property '".$property->getName()."' has an unknown target Entity!"); // @codeCoverageIgnore
+        }
+
+        /** @var JoinTable $join */
+        $join = $this->getJoin($property, JoinTable::class);
+        $join->sourceEntityName = $from;
+        $join->targetEntityName = $to;
+
+        $relation->join = $join;
+
+        // Register the join table
+        EntityManager::getInstance()->registerJoinTable($join);
+
+        // Add declaration to the structure
+        $structure->relationProperties[] = $property->getName();
+        $structure->foreignColumnNames[] = $join->column;
+        $structure->relations[$property->getName()] = $relation;
+    }
+
+    /**
+     * Get Join(table)
      *
      * @param \ReflectionProperty $property
+     * @param string $type Class of join type
      * @param bool $exception
-     * @return Join
+     *
+     * @return Join|JoinTable
+     *
      * @throws RelationException
      */
-    private function getJoin(\ReflectionProperty $property, $exception = true)
+    private function getJoin(\ReflectionProperty $property, $type = Join::class, $exception = true)
     {
-        $join = $this->reader->getPropertyAnnotation($property, Join::class);
-        if ($exception && ($join === null || ! $join instanceof Join)) {
-            throw new RelationException("Relation in '".$property->getDeclaringClass()->getName()."' -> '".$property->getName()."' should have @Join annotation!"); // @codeCoverageIgnore
+        /** @var Join|JoinTable $join */
+        $join = $this->reader->getPropertyAnnotation($property, $type);
+        if ($exception && ($join === null || ! $join instanceof $type)) {
+            throw new RelationException("Relation in '".$property->getDeclaringClass()->getName()."' -> '".$property->getName()."' should have @$type annotation!"); // @codeCoverageIgnore
         }
-        if ($exception && ($join->column === null || $join->targetColumn === null)) {
+        if ($exception && $type === Join::class && ($join->column === null || $join->targetColumn === null)) {
             throw new RelationException("Join in '".$property->getDeclaringClass()->getName()."' -> '".$property->getName()."' should have the local column and targetColumn filled in!"); // @codeCoverageIgnore
+        }
+        if ($exception && $type === JoinTable::class && ($join->name == "" || ! $join->column instanceof JoinColumn || ! $join->targetColumn instanceof JoinColumn)) {
+            throw new RelationException("JoinTable in '".$property->getDeclaringClass()->getName()."' -> '".$property->getName()."' should have a table name and 2 join columns in column and targetColumn!"); // @codeCoverageIgnore
         }
         return $join;
     }

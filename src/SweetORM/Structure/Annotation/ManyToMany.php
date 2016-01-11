@@ -22,4 +22,8 @@ use Doctrine\Common\Annotations\Annotation\Enum;
  */
 class ManyToMany extends Relation
 {
+    /**
+     * @var JoinTable
+     */
+    public $join;
 }
