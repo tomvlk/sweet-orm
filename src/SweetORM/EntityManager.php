@@ -332,11 +332,13 @@ class EntityManager
      * Start a query
      *
      * @param $entity
+     * @param bool $verify
+     *
      * @return Query
      */
-    public static function query($entity)
+    public static function query($entity, $verify = true)
     {
-        return new Query($entity);
+        return new Query($entity, false, $verify);
     }
 
     /**
