@@ -21,7 +21,7 @@ class ManyToMany extends Solver
      * @param Entity $entity
      * @return mixed
      */
-    public function solve(Entity &$entity)
+    public function solveFetch(Entity &$entity)
     {
         /** @var JoinTable $joinTable */
         $joinTable = $this->relation->join;
@@ -35,5 +35,19 @@ class ManyToMany extends Solver
         $results = EntityManager::query($this->relation->targetEntity)->custom($query, $bind);
 
         return $results;
+    }
+
+    /**
+     * Solve when saving, this will only be called when changes made to the relation property!
+     *
+     * @param Entity $entity
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function solveSave(Entity &$entity)
+    {
+        // TODO: Implement solveSave() method.
     }
 }

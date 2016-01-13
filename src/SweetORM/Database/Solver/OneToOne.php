@@ -19,11 +19,25 @@ class OneToOne extends Solver
      * @param Entity $entity
      * @return mixed
      */
-    public function solve(Entity &$entity)
+    public function solveFetch(Entity &$entity)
     {
         // We can use the static ::get method on the entity
         $targetEntity = $this->relation->targetEntity;
 
         return call_user_func($targetEntity . '::get', $entity->{$this->relation->join->column});
+    }
+
+    /**
+     * Solve when saving, this will only be called when changes made to the relation property!
+     *
+     * @param Entity $entity
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function solveSave(Entity &$entity)
+    {
+        // TODO: Implement solveSave() method.
     }
 }

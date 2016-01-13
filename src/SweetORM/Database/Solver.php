@@ -55,6 +55,19 @@ abstract class Solver
      * @param Entity $entity
      *
      * @return mixed
+     *
+     * @throws \Exception
      */
-    public abstract function solve(Entity &$entity);
+    public abstract function solveFetch(Entity &$entity);
+
+    /**
+     * Solve when saving, this will only be called when changes made to the relation property!
+     *
+     * @param Entity $entity
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public abstract function solveSave(Entity &$entity);
 }

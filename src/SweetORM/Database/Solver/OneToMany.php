@@ -20,7 +20,7 @@ class OneToMany extends Solver
      * @param Entity $entity
      * @return mixed
      */
-    public function solve(Entity &$entity)
+    public function solveFetch(Entity &$entity)
     {
         // We need to find all target entities with the ID defined in the current entity source column
         $column = $this->relation->join->column;
@@ -30,5 +30,19 @@ class OneToMany extends Solver
 
         $query = EntityManager::find($this->relation->targetEntity);
         return $query->where($where)->all();
+    }
+
+    /**
+     * Solve when saving, this will only be called when changes made to the relation property!
+     *
+     * @param Entity $entity
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function solveSave(Entity &$entity)
+    {
+        // TODO: Implement solveSave() method.
     }
 }

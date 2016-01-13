@@ -138,7 +138,7 @@ class RelationManager
             throw new \Exception("Solver not found for relation '".get_class($relation)."'!"); // @codeCoverageIgnore
         }
 
-        self::$lazy[get_class($this->entity)] [$virtualProperty] [$search] = $solver->solve($this->entity);
+        self::$lazy[get_class($this->entity)] [$virtualProperty] [$search] = $solver->solveFetch($this->entity);
         return self::$lazy[get_class($this->entity)] [$virtualProperty] [$search];
     }
 
