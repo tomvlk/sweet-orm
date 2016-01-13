@@ -8,6 +8,7 @@
 
 namespace SweetORM\Database\Solver;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use SweetORM\Database\Solver;
 use SweetORM\Entity;
 use SweetORM\EntityManager;
@@ -36,12 +37,13 @@ class OneToMany extends Solver
      * Solve when saving, this will only be called when changes made to the relation property!
      *
      * @param Entity $entity
+     * @param ArrayCollection $value
      *
      * @return mixed
      *
      * @throws \Exception
      */
-    public function solveSave(Entity &$entity)
+    public function solveSave(Entity &$entity, &$value)
     {
         // TODO: Implement solveSave() method.
     }

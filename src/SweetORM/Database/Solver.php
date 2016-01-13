@@ -9,6 +9,7 @@
 namespace SweetORM\Database;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use SweetORM\Entity;
 use SweetORM\EntityManager;
 use SweetORM\Structure\Annotation\Relation;
@@ -64,10 +65,11 @@ abstract class Solver
      * Solve when saving, this will only be called when changes made to the relation property!
      *
      * @param Entity $entity
+     * @param ArrayCollection|Entity $value
      *
      * @return mixed
      *
      * @throws \Exception
      */
-    public abstract function solveSave(Entity &$entity);
+    public abstract function solveSave(Entity &$entity, &$value);
 }
