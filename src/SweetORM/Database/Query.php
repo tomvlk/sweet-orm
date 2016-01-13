@@ -35,6 +35,11 @@ class Query
     private $class;
 
     /**
+     * @var bool
+     */
+    private $verify;
+
+    /**
      * @var EntityStructure
      */
     private $structure;
@@ -93,11 +98,15 @@ class Query
      * Query Builder constructor.
      *
      * @param string|Entity $entityClass
-     * @param bool $autoSelect Automaticly do the select and from based on the entity.
+     * @param bool $autoSelect Automatically do the select and from based on the entity.
+     * @param bool $verify Verify columns, true by default, false NOT  recommended!
+     *
      * @throws ORMException
      */
-    public function __construct($entityClass, $autoSelect = true)
+    public function __construct($entityClass, $autoSelect = true, $verify = true)
     {
+        $this->verify = $verify;
+
         if ($entityClass instanceof Entity) {
             $reflection = new \ReflectionClass($entityClass); // @codeCoverageIgnore
             $entityClass = $reflection->getName(); // @codeCoverageIgnore
@@ -406,7 +415,7 @@ class Query
             }
 
             // Validate compare, validate column name
-            if (! in_array($column, $columnNames)) {
+            if ($this->verify && ! in_array($column, $columnNames)) {
                 $this->exception = new QueryException("Trying to prepare a where with column condition for a undefined column!", 0, $this->exception);
                 continue;
             }
@@ -686,6 +695,22 @@ class Query
         return $status;
     }
 
+
+    /**
+     * Only prepare the query SQL statement and return PDO Statement back.
+     * WARNING, don't use this to fetch! Only for update/insert!
+     *
+     * @param string $sql
+     *
+     * @return \PDOStatement
+     */
+    public function prepare($sql)
+    {
+        $connection = ConnectionManager::getConnection();
+        $statement = $connection->prepare($sql);
+        $statement->setFetchMode(\PDO::FETCH_NUM);
+        return $statement;
+    }
 
 
 

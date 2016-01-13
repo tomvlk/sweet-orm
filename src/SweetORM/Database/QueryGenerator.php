@@ -13,12 +13,26 @@ use SweetORM\Structure\Annotation\Column;
 class QueryGenerator
 {
 
+    /** @var bool */
+    private $verify = true;
+
     /**
      * QueryGenerator constructor.
      */
     public function __construct()
     {
     }
+
+    /**
+     * Set if we are going to verify the columns
+     *
+     * @param bool $verify
+     */
+    public function setVerify($verify)
+    {
+        $this->verify = $verify;
+    }
+
 
     /**
      * Generate Where clause
@@ -227,6 +241,5 @@ class QueryGenerator
         }
         return \PDO::PARAM_STR;
     }
-
 
 }
