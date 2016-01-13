@@ -7,6 +7,7 @@
  */
 
 namespace SweetORM\Structure;
+use Doctrine\Common\Collections\ArrayCollection;
 use SweetORM\Database\Query;
 use SweetORM\Database\Solver;
 use SweetORM\Entity;
@@ -14,6 +15,7 @@ use SweetORM\EntityManager;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\Annotation\Join;
 use SweetORM\Structure\Annotation\JoinTable;
+use SweetORM\Structure\Annotation\ManyToMany;
 use SweetORM\Structure\Annotation\ManyToOne;
 use SweetORM\Structure\Annotation\OneToOne;
 use SweetORM\Structure\Annotation\Relation;
@@ -125,7 +127,7 @@ class RelationManager
 
         // If only from cache then return null, as it isn't in the cache right now!
         if ($cacheOnly) {
-            return null; // @codeCoverageIgnore
+            return null;
         }
 
         $solverName = join('', array_slice(explode("\\", get_class($relation)), -1));
@@ -196,5 +198,52 @@ class RelationManager
 
         // Set the cache
         self::$lazy[get_class($this->entity)] [$virtualProperty] [$id] = $relationEntity;
+    }
+
+    /**
+     * Save relations, solve the mystery of the relations :D.
+     */
+    public function saveRelations()
+    {
+        foreach ($this->structure->relationProperties as $virtualProperty) {
+            // Check for existing of the relation property
+            if (! in_array($virtualProperty, $this->structure->relationProperties) || ! isset($this->structure->relations[$virtualProperty])) {
+                throw new RelationException("Relation not defined!"); // @codeCoverageIgnore
+            }
+
+            // Get relation and verify
+            $relation = $this->structure->relations[$virtualProperty]; /** @var Relation $relation */
+            if (! $relation instanceof Relation) {
+                throw new RelationException("Relation indexing failed, something is really wrong, please report! Fetch proprty no instance of relation!"); // @codeCoverageIgnore
+            }
+
+            // Property existing check
+            if ($relation->join instanceof Join && ! isset($this->entity->{$relation->join->column})) {
+                throw new \Exception("Property is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
+            }
+            if ($relation->join instanceof JoinTable && ! isset($this->entity->{$relation->join->column->entityColumn})) {
+                throw new \Exception("Property is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
+            }
+
+            // Is the content changed?
+            $value = $this->fetch($virtualProperty, true);
+            if ($value === null) {
+                // Nothing is changed, lets continue loop
+                continue;
+            }
+            if (! $value instanceof ArrayCollection && ! $value instanceof Entity) {
+                throw new RelationException("The value of the relation '".$virtualProperty."' should be an ArrayCollection or Entity!");
+            }
+
+            // Make solver
+            $solverName = join('', array_slice(explode("\\", get_class($relation)), -1));
+            $class = "\\SweetORM\\Database\\Solver\\" . $solverName;
+
+            /** @var Solver $solver */
+            $solver = new $class($relation, $this->structure, new Query($relation->targetEntity, false));
+
+            // Lets call the solver to solve this save relation problem
+            $solver->solveSave($this->entity, $value);
+        }
     }
 }

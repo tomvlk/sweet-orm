@@ -8,6 +8,7 @@
 
 namespace SweetORM;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use SweetORM\Database\Query;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\Annotation\JoinTable;
@@ -43,13 +44,13 @@ class EntityManager
      *
      * @param bool $saved
      * @param Entity[]|Entity|null $result
-     * @return Entity|Entity[]|null
+     * @return Entity|ArrayCollection<Entity>|null
      */
     public function afterFetch($saved, $result)
     {
         // Multiple results
         if (is_array($result)) {
-            $all = array();
+            $all = new ArrayCollection();
             foreach ($result as $entity) {
                 if ($entity instanceof Entity) {
                     $all[] = self::afterFetch($saved, $entity);
@@ -238,7 +239,12 @@ class EntityManager
 
         if ($entity->_saved) {
             // Update
-            return $query->update()->set($this->getEntityDataArray($entity))->where(array($structure->primaryColumn->name => $entity->_id))->apply();
+            $result = $query->update()->set($this->getEntityDataArray($entity))->where(array($structure->primaryColumn->name => $entity->_id))->apply();
+
+            // Update relations
+            RelationManager::with($entity)->saveRelations();
+
+            return $result;
         } else {
             // Insert
             $id = $query->insert()->into($structure->tableName)->values($this->getEntityDataArray($entity))->apply();
@@ -246,6 +252,9 @@ class EntityManager
             if ($id === false) {
                 return false; // @codeCoverageIgnore
             }
+
+            // Update relations
+            RelationManager::with($entity)->saveRelations();
 
             // Save ID and state
             $entity->{$structure->primaryColumn->propertyName} = $id;
