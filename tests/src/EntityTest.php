@@ -11,6 +11,7 @@ namespace SweetORM\Tests;
 use SweetORM\ConnectionManager;
 use SweetORM\Exception\QueryException;
 use SweetORM\Exception\RelationException;
+use SweetORM\Structure\RelationManager;
 use SweetORM\Tests\Models\Category;
 use SweetORM\Tests\Models\Course;
 use SweetORM\Tests\Models\Post;
@@ -438,5 +439,55 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         // Try to set it null, should give no errors, only when saving!
         $post->category = null;
+    }
+
+
+
+    /**
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Structure\RelationManager::saveRelations
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\ManyToMany
+     * @covers \SweetORM\Database\Solver\ManyToMany::solveSave
+     */
+    public function testSaveManyToMany()
+    {
+        Utilities::resetDatabase();
+
+        // We will get student 2 first, the student already got course with id 1!
+        $student = Student::get(2); /** @var Student $student */
+        $this->assertEquals(2, $student->_id);
+
+        // Add course with id 2
+        $student->courses[] = Course::get(2);
+
+        // Check if it's in the array
+        $this->assertCount(2, $student->courses);
+
+        // Save the student, this should solve the relation updates too
+        $result = $student->save();
+        $this->assertTrue($result);
+
+        // Verify if it worked by clearing caches and re-fetch the student and courses
+        RelationManager::clearCache();
+
+        $student = Student::get(2);
+        $this->assertEquals(2, $student->_id);
+        $this->assertCount(2, $student->courses);
+
+        // Check the other way around
+        $course = Course::get(2); /** @var Course $course */
+
+        $found = false;
+        foreach ($course->students as $student) {
+            if ($student->_id == 2) {
+                $found = true;
+            }
+        }
+        $this->assertTrue($found);
     }
 }
