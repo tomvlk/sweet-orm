@@ -33,16 +33,19 @@ abstract class Entity
      */
     public final function __construct()
     {
-        EntityManager::getInstance()->injectVirtualProperties($this);
+        EntityManager::getInstance()->afterConstruct($this);
     }
 
     /**
      * Relationship catcher
      * @param $name
-     * @return mixed
+     * @return int|string|mixed
      */
     public final function __get($name)
     {
+        if ($name === '_id') {
+            return EntityManager::getInstance()->getId($this);
+        }
         return EntityManager::getInstance()->getLazy($this, $name);
     }
 

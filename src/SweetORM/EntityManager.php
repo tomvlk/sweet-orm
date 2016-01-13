@@ -70,6 +70,19 @@ class EntityManager
     }
 
     /**
+     * Did construct entity, mostly when making new one or fetched.
+     * @param Entity $entity
+     */
+    public function afterConstruct(&$entity)
+    {
+        // First we want to get rid of the virtual relation properties.
+        $this->injectVirtualProperties($entity);
+
+        // Get rid of the $_id property, it will be virtual too
+        unset($entity->_id);
+    }
+
+    /**
      * Inject Virtual Properties for relations
      *
      * @param Entity $entity
@@ -175,6 +188,24 @@ class EntityManager
             $this->registerEntity($entityClassName);
         }
         return $this->entities[$entityClassName];
+    }
+
+
+    /**
+     * Get entity ID value
+     *
+     * @param Entity $entity
+     * @return int|string|null
+     *
+     */
+    public function getId(&$entity)
+    {
+        $structure = $this->getEntityStructure($entity);
+
+        if (isset($entity->{$structure->primaryColumn->propertyName})) {
+            return $entity->{$structure->primaryColumn->propertyName};
+        }
+        return null;
     }
 
 
