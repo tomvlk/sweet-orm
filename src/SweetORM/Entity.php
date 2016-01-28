@@ -9,6 +9,7 @@
 namespace SweetORM;
 use SweetORM\Database\Query;
 use SweetORM\Exception\RelationException;
+use SweetORM\Structure\RelationManager;
 
 /**
  * Entity. Extend this class for all the functionality you get with the ORM
@@ -113,5 +114,14 @@ abstract class Entity
     public static function get($primaryValue)
     {
         return EntityManager::getInstance()->get(static::class, $primaryValue);
+    }
+
+    /**
+     * Clear Lazy Fetching cache, will force to reload relationship entities.
+     * You must call this when you expect new data from the database!
+     */
+    public static function clearCache()
+    {
+        RelationManager::clearCache();
     }
 }
