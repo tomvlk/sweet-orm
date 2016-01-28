@@ -12,6 +12,9 @@ use SweetORM\Entity;
 use SweetORM\Structure\Annotation\Column;
 use SweetORM\Structure\Annotation\EntityClass;
 use SweetORM\Structure\Annotation\Join;
+use SweetORM\Structure\Annotation\JoinColumn;
+use SweetORM\Structure\Annotation\JoinTable;
+use SweetORM\Structure\Annotation\ManyToMany;
 use SweetORM\Structure\Annotation\ManyToOne;
 use SweetORM\Structure\Annotation\OneToMany;
 use SweetORM\Structure\Annotation\OneToOne;
@@ -69,4 +72,12 @@ class Post extends Entity
      * @Column(type="string")
      */
     public $content;
+
+
+    /**
+     * @var PostChange[]
+     * @OneToMany(targetEntity="SweetORM\Tests\Models\PostChange")
+     * @Join(column="id", targetColumn="postid")
+     */
+    public $changes;
 }

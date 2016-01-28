@@ -68,6 +68,8 @@ class Column implements BaseAnnotation
 
     /**
      * Parse and return default value of column.
+     *
+     * @return string|int|null default value
      */
     public function defaultValue()
     {
@@ -81,5 +83,7 @@ class Column implements BaseAnnotation
             // Parse special replacements (if we have one)
             $default = str_replace("{{CURRENT_TIME}}", date('c', time()), $default);
         }
+
+        return $default;
     }
 }

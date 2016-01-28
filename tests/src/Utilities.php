@@ -85,6 +85,18 @@ class Utilities {
             array('id' => '10', 'authorid' => '3', 'categoryid' => '4', 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
         );
 
+        $postchanges = array(
+            array('id' => '1', 'postid' => '1', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '2', 'postid' => '1', 'authorid' => '2', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '3', 'postid' => '1', 'authorid' => '2', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '4', 'postid' => '2', 'authorid' => '2', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '5', 'postid' => '2', 'authorid' => '3', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '6', 'postid' => '2', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '7', 'postid' => '3', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '8', 'postid' => '4', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => '9', 'postid' => '4', 'authorid' => '3', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+        );
+
         $courses = array(
             array('id' => '1', 'name' => 'Course #1', 'description' => null),
             array('id' => '2', 'name' => 'Course #2', 'description' => 'Optional Description')
@@ -152,6 +164,19 @@ class Utilities {
 
         foreach ($posts as $row) {
             $sql = "INSERT INTO post (id, authorid, categoryid, title, content) VALUES (?, ?, ?, ?, ?);";
+            $query = $connection->prepare($sql);
+
+            $idx = 1;
+            foreach($row as $column => $value) {
+                $query->bindValue($idx, $value);
+                $idx++;
+            }
+
+            $query->execute();
+        }
+
+        foreach ($postchanges as $row) {
+            $sql = "INSERT INTO postchange (id, postid, authorid, created) VALUES (?, ?, ?, ?);";
             $query = $connection->prepare($sql);
 
             $idx = 1;

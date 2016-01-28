@@ -378,14 +378,14 @@ class EntityManager
         foreach ($columns as $column) {
             if (isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} !== null) {
                 $data[$column->name] = $entity->{$column->propertyName};
-            } elseif (isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} === null) {
+            } elseif (! isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} === null) {
                 // Throw exception if null not allowed.
-                if (! $column->null && $column->default === null) {
+                if (! $column->null && ! $column->autoIncrement && $column->default === null) {
                     throw new ConstraintViolationException("Column '".$column->propertyName."' can't be empty! Null not allowed!");
                 }
 
                 // Fill in default value if allowed
-                if (! $column->null && $column->default !== null) {
+                if (! $column->null && ! $column->autoIncrement && $column->default !== null) {
                     $data[$column->name] = $column->defaultValue();
                 } else {
                     $data[$column->name] = null;
