@@ -9,12 +9,15 @@
 namespace SweetORM\Tests;
 
 use SweetORM\ConnectionManager;
+use SweetORM\Exception\ORMException;
 use SweetORM\Exception\QueryException;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\RelationManager;
+use SweetORM\Tests\Models\Author;
 use SweetORM\Tests\Models\Category;
 use SweetORM\Tests\Models\Course;
 use SweetORM\Tests\Models\Post;
+use SweetORM\Tests\Models\PostChange;
 use SweetORM\Tests\Models\Student;
 
 class EntityTest extends \PHPUnit_Framework_TestCase
@@ -178,7 +181,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         try {
             $post->save();
             $this->assertTrue(false);
-        } catch (QueryException $qe) {
+        } catch (ORMException $qe) {
             $this->assertTrue(true);
         }
 
@@ -307,6 +310,77 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $category = $post->category;
         $this->assertInstanceOf(Category::class, $category);
     }
+
+
+
+    /**
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\ManyToOne
+     */
+    public function testManyToOneRelation()
+    {
+        Utilities::resetDatabase();
+
+        // Get post, and get Author entity from the relation value
+        /** @var Post $post */
+        $post = Post::get(1);
+
+        /** @var Author $author */
+        $author = $post->author;
+
+        $this->assertEquals(1, $author->id);
+    }
+
+    /**
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Structure\RelationManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     * @covers \SweetORM\Database\Solver
+     * @covers \SweetORM\Database\Solver\ManyToOne
+     */
+    public function testJoinEntity()
+    {
+        Utilities::resetDatabase();
+
+        // Test fetching POST with ID 1.
+        /** @var Post $post */
+        $post = Post::get(1);
+
+        // We will get the log of the post
+        /** @var PostChange[] $changes */
+        $changes = $post->changes;
+
+        $this->assertCount(3, $changes);
+
+
+        // Add a new change
+        $insert = new PostChange();
+
+        $insert->author = $post->author;
+        $insert->post = $post;
+
+        // Lets do the insert created time automatically with the default {{CURRENT_TIME}} value.
+        $save = $insert->save();
+
+        $this->assertTrue($save);
+
+
+        // Clear and refetch post with the changes
+        Post::clearCache();
+
+        $post = Post::get(1);
+        $changes = $post->changes;
+
+        $this->assertCount(4, $changes);
+    }
+
 
     /**
      * @covers \SweetORM\Entity

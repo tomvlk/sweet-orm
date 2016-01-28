@@ -36,4 +36,10 @@ class Join implements BaseAnnotation
      * @Required()
      */
     public $targetColumn;
+
+    /**
+     * Optional join? Will not fail but stay NULL when $column is not set at the source.
+     * @var bool
+     */
+    public $optional = true;
 }

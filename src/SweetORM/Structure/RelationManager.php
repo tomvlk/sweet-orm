@@ -15,7 +15,6 @@ use SweetORM\EntityManager;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\Annotation\Join;
 use SweetORM\Structure\Annotation\JoinTable;
-use SweetORM\Structure\Annotation\ManyToMany;
 use SweetORM\Structure\Annotation\ManyToOne;
 use SweetORM\Structure\Annotation\OneToOne;
 use SweetORM\Structure\Annotation\Relation;
@@ -218,11 +217,19 @@ class RelationManager
             }
 
             // Property existing check
-            if ($relation->join instanceof Join && ! isset($this->entity->{$relation->join->column})) {
-                throw new \Exception("Property is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
-            }
-            if ($relation->join instanceof JoinTable && ! isset($this->entity->{$relation->join->column->entityColumn})) {
-                throw new \Exception("Property is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
+            if (($relation->join instanceof Join && ! isset($this->entity->{$relation->join->column})) ||
+                ($relation->join instanceof JoinTable && ! isset($this->entity->{$relation->join->column->entityColumn}))) {
+                if ($relation->join->optional) {
+                    // Ignore this, the join is optional.
+                    continue;
+                }
+
+                if ($relation->join instanceof Join) { // @codeCoverageIgnore
+                    throw new \Exception("Property with column '".$relation->join->column."' is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
+                } // @codeCoverageIgnore
+                if ($relation->join instanceof JoinTable) { // @codeCoverageIgnore
+                    throw new \Exception("Property with column '".$relation->join->column->entityColumn."' is not set at entity '".get_class($this->entity)."' when trying to solve relationship fetching."); // @codeCoverageIgnore
+                } // @codeCoverageIgnore
             }
 
             // Is the content changed?
@@ -232,7 +239,7 @@ class RelationManager
                 continue;
             }
             if (! $value instanceof ArrayCollection && ! $value instanceof Entity) {
-                throw new RelationException("The value of the relation '".$virtualProperty."' should be an ArrayCollection or Entity!");
+                throw new RelationException("The value of the relation '".$virtualProperty."' should be an ArrayCollection or Entity!"); // @codeCoverageIgnore
             }
 
             // Make solver

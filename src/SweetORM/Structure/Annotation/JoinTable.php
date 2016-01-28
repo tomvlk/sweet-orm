@@ -55,4 +55,11 @@ class JoinTable implements BaseAnnotation
      * @var string
      */
     public $targetEntityName;
+
+
+    /**
+     * Optional join? Will not fail but stay NULL when $column is not set at the source.
+     * @var bool
+     */
+    public $optional = true;
 }
