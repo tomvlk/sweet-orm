@@ -6,7 +6,6 @@
  * @copyright  2016 Tom Valk
  */
 
-
 require_once __DIR__ . '/Annotation/EntityClass.php';
 require_once __DIR__ . '/Annotation/Column.php';
 require_once __DIR__ . '/Annotation/Table.php';
