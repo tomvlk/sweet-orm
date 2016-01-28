@@ -61,4 +61,25 @@ class Column implements BaseAnnotation
      * @var string
      */
     public $propertyName;
+
+
+
+
+
+    /**
+     * Parse and return default value of column.
+     */
+    public function defaultValue()
+    {
+        if ($this->default === null) {
+            return null;
+        }
+
+        $default = $this->default;
+
+        if (strstr($this->default, '{{') && strstr($this->default, '}}')) {
+            // Parse special replacements (if we have one)
+            $default = str_replace("{{CURRENT_TIME}}", date('c', time()), $default);
+        }
+    }
 }

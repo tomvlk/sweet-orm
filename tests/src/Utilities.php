@@ -44,6 +44,12 @@ class Utilities {
             "TRUNCATE TABLE category;");
 
         $connection->exec(/** @lang MySQL */
+            "TRUNCATE TABLE author;");
+
+        $connection->exec(/** @lang MySQL */
+            "TRUNCATE TABLE postchange;");
+
+        $connection->exec(/** @lang MySQL */
             "TRUNCATE TABLE student;");
 
         $connection->exec(/** @lang MySQL */
@@ -60,17 +66,23 @@ class Utilities {
             array('id' => '4','name' => 'Downloads','description' => 'Download Posts')
         );
 
+        $authors = array(
+            array('id' => '1', 'name' => 'First Author', 'email' => null),
+            array('id' => '2', 'name' => 'Jan the Author', 'email' => 'jan.author@example.com'),
+            array('id' => '3', 'name' => 'Eric Authorinus', 'email' => 'ericauth@example.com')
+        );
+
         $posts = array(
             array('id' => '1', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #1', 'content' => 'Sample News 1'),
             array('id' => '2', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #2', 'content' => 'Sample News 2'),
             array('id' => '3', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #3', 'content' => 'Sample News 3'),
             array('id' => '4', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #4', 'content' => 'Sample News 4'),
-            array('id' => '5', 'authorid' => '1', 'categoryid' => '2', 'title' => 'Sample Press #1', 'content' => 'Sample Press 1'),
-            array('id' => '6', 'authorid' => '1', 'categoryid' => '2', 'title' => 'Sample Press #2', 'content' => 'Sample Press 2'),
-            array('id' => '7', 'authorid' => '1', 'categoryid' => '3', 'title' => 'Sample FAQ #1', 'content' => 'Sample FAQ 1'),
-            array('id' => '8', 'authorid' => '1', 'categoryid' => '3', 'title' => 'Sample FAQ #2', 'content' => 'Sample FAQ 2'),
-            array('id' => '9', 'authorid' => '1', 'categoryid' => '4', 'title' => 'Sample Downloads #1', 'content' => 'Sample Downloads 1'),
-            array('id' => '10', 'authorid' => '1', 'categoryid' => '4', 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
+            array('id' => '5', 'authorid' => '2', 'categoryid' => '2', 'title' => 'Sample Press #1', 'content' => 'Sample Press 1'),
+            array('id' => '6', 'authorid' => '2', 'categoryid' => '2', 'title' => 'Sample Press #2', 'content' => 'Sample Press 2'),
+            array('id' => '7', 'authorid' => '2', 'categoryid' => '3', 'title' => 'Sample FAQ #1', 'content' => 'Sample FAQ 1'),
+            array('id' => '8', 'authorid' => '3', 'categoryid' => '3', 'title' => 'Sample FAQ #2', 'content' => 'Sample FAQ 2'),
+            array('id' => '9', 'authorid' => '3', 'categoryid' => '4', 'title' => 'Sample Downloads #1', 'content' => 'Sample Downloads 1'),
+            array('id' => '10', 'authorid' => '3', 'categoryid' => '4', 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
         );
 
         $courses = array(
@@ -108,8 +120,25 @@ class Utilities {
             array('student_id' => 10, 'course_id' => 2)
         );
 
+
+
+
+
         foreach ($category as $row) {
             $sql = "INSERT INTO category (id, name, description) VALUES (?, ?, ?);";
+            $query = $connection->prepare($sql);
+
+            $idx = 1;
+            foreach($row as $column => $value) {
+                $query->bindValue($idx, $value);
+                $idx++;
+            }
+
+            $query->execute();
+        }
+
+        foreach ($authors as $row) {
+            $sql = "INSERT INTO author (id, name, email) VALUES (?, ?, ?);";
             $query = $connection->prepare($sql);
 
             $idx = 1;

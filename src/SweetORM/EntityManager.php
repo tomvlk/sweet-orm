@@ -10,6 +10,8 @@ namespace SweetORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use SweetORM\Database\Query;
+use SweetORM\Exception\ConstraintViolationException;
+use SweetORM\Exception\ORMException;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\Annotation\JoinTable;
 use SweetORM\Structure\EntityStructure;
@@ -363,6 +365,8 @@ class EntityManager
      * Get entity column=>value array.
      * @param Entity $entity
      * @return array
+     *
+     * @throws ConstraintViolationException
      */
     private function getEntityDataArray($entity)
     {
@@ -372,8 +376,20 @@ class EntityManager
         $columns = $structure->columns;
 
         foreach ($columns as $column) {
-            if (isset($entity->{$column->propertyName})) {
+            if (isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} !== null) {
                 $data[$column->name] = $entity->{$column->propertyName};
+            } elseif (isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} === null) {
+                // Throw exception if null not allowed.
+                if (! $column->null && $column->default === null) {
+                    throw new ConstraintViolationException("Column '".$column->propertyName."' can't be empty! Null not allowed!");
+                }
+
+                // Fill in default value if allowed
+                if (! $column->null && $column->default !== null) {
+                    $data[$column->name] = $column->defaultValue();
+                } else {
+                    $data[$column->name] = null;
+                }
             } else {
                 $data[$column->name] = null;
             }
