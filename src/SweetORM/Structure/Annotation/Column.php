@@ -22,7 +22,7 @@ class Column implements BaseAnnotation
 {
     /**
      * @Required
-     * @Enum({"string", "integer", "float", "double", "text"})
+     * @Enum({"string", "integer", "float", "double", "text", "date"})
      * @var string
      */
     public $type;
