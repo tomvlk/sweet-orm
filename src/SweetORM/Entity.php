@@ -62,7 +62,7 @@ abstract class Entity
     }
 
 
-    /** ==== Entity Instance Operatios **/
+    /** ==== Entity Instance Operations **/
 
     /**
      * Save Entity
