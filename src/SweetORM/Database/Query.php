@@ -268,7 +268,14 @@ class Query
             $idx = 1;
             foreach($bind as $key => $value) {
                 if ($numericBinding) {
-                    $query->bindValue($idx, $value, is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR); // TODO: Better type detection..
+                    if (is_int($value)) {
+                        $type = \PDO::PARAM_INT;
+                    } elseif(is_bool($value)) {
+                        $type = \PDO::PARAM_BOOL;
+                    } else {
+                        $type = \PDO::PARAM_STR;
+                    }
+                    $query->bindValue($idx, $value, $type);
                 } else {
                     $query->bindValue($key, $value);
                 }
@@ -416,7 +423,7 @@ class Query
 
             // Validate compare, validate column name
             if ($this->verify && ! in_array($column, $columnNames)) {
-                $this->exception = new QueryException("Trying to prepare a where with column condition for a undefined column!", 0, $this->exception);
+                $this->exception = new QueryException("Trying to prepare a where with column condition for a undefined column! ('".$column."', table '".$this->table."')", 0, $this->exception);
                 continue;
             }
 
