@@ -39,6 +39,13 @@ class Post extends Entity
     public $authorid;
 
     /**
+     * @var Author
+     * @ManyToOne(targetEntity="SweetORM\Tests\Models\Author")
+     * @Join(column="authorid", targetColumn="id")
+     */
+    public $author;
+
+    /**
      * @var int
      * @Column(type="integer")
      */
