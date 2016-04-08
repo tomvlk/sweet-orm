@@ -11,7 +11,6 @@ namespace SweetORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use SweetORM\Database\Query;
 use SweetORM\Exception\ConstraintViolationException;
-use SweetORM\Exception\ORMException;
 use SweetORM\Exception\RelationException;
 use SweetORM\Structure\Annotation\JoinTable;
 use SweetORM\Structure\EntityStructure;
@@ -207,7 +206,7 @@ class EntityManager
         if (isset($entity->{$structure->primaryColumn->propertyName})) {
             return $entity->{$structure->primaryColumn->propertyName};
         }
-        return null;
+        return null; // @codeCoverageIgnore
     }
 
 
@@ -316,6 +315,18 @@ class EntityManager
     }
 
 
+    /**
+     * Get Data Array with Column filter.
+     * @param Entity $entity
+     * @param array $columns
+     * @return array
+     */
+    public function data($entity, array $columns = array())
+    {
+        return $this->getEntityDataArray($entity, false, $columns);
+    }
+
+
     /** ==== Entity Operation Functions, will apply on specific entities ==== **/
 
 
@@ -364,11 +375,13 @@ class EntityManager
     /**
      * Get entity column=>value array.
      * @param Entity $entity
+     * @param boolean $strict Check for constraints. Default true.
+     * @param array $only Only column names provided. Default all.
      * @return array
      *
      * @throws ConstraintViolationException
      */
-    private function getEntityDataArray($entity)
+    private function getEntityDataArray($entity, $strict = true, $only = array())
     {
         $data = array();
 
@@ -376,11 +389,13 @@ class EntityManager
         $columns = $structure->columns;
 
         foreach ($columns as $column) {
+            if (count($only) > 0 && ! in_array($column->name, $only)) continue; // Ignore, we don't want this column!
+
             if (isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} !== null) {
                 $data[$column->name] = $entity->{$column->propertyName};
             } elseif (! isset($entity->{$column->propertyName}) && $entity->{$column->propertyName} === null) {
-                // Throw exception if null not allowed.
-                if (! $column->null && ! $column->autoIncrement && $column->default === null) {
+                // Throw exception if null not allowed and in strict mode.
+                if ($strict && ! $column->null && ! $column->autoIncrement && $column->default === null) {
                     throw new ConstraintViolationException("Column '".$column->propertyName."' can't be empty! Null not allowed!");
                 }
 
