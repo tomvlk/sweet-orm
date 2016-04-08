@@ -84,6 +84,16 @@ abstract class Entity
     }
 
 
+    /**
+     * Get current entity as array, define which columns, empty for all.
+     * @param array $columns Columns to get.
+     * @return array
+     */
+    public function data(array $columns = array())
+    {
+        return EntityManager::getInstance()->data($this, $columns);
+    }
+
     /** ==== Entity Static Operation Functions, will apply on specific entities ==== **/
 
 
