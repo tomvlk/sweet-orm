@@ -10,6 +10,7 @@ namespace SweetORM\Tests\Models;
 
 use SweetORM\Entity;
 use SweetORM\Structure\Annotation\Column;
+use SweetORM\Structure\Annotation\Constraint;
 use SweetORM\Structure\Annotation\EntityClass;
 use SweetORM\Structure\Annotation\JoinColumn;
 use SweetORM\Structure\Annotation\JoinTable;
@@ -33,6 +34,13 @@ class Student extends Entity
      * @Column(type="string")
      */
     public $name;
+
+    /**
+     * @var string
+     * @Column(type="string", null=true)
+     * @Constraint(valid="email")
+     */
+    public $email;
 
 
     /**
