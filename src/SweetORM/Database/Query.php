@@ -257,10 +257,10 @@ class Query
                 if (is_int($key)) {
                     continue;
                 }else{
-                    $numericBinding = false;
-                    if (substr($key, 0, 1) !== ':') {
-                        throw new QueryException("When binding, you should use numeric keys or keys with : before each key to identify the binding place in the query!");
-                    }
+                    $numericBinding = false; // @codeCoverageIgnore
+                    if (substr($key, 0, 1) !== ':') { // @codeCoverageIgnore
+                        throw new QueryException("When binding, you should use numeric keys or keys with : before each key to identify the binding place in the query!"); // @codeCoverageIgnore
+                    } // @codeCoverageIgnore
                 }
             }
 
@@ -269,9 +269,9 @@ class Query
             foreach($bind as $key => $value) {
                 if ($numericBinding) {
                     if (is_int($value)) {
-                        $type = \PDO::PARAM_INT;
+                        $type = \PDO::PARAM_INT; // @codeCoverageIgnore
                     } elseif(is_bool($value)) {
-                        $type = \PDO::PARAM_BOOL;
+                        $type = \PDO::PARAM_BOOL; // @codeCoverageIgnore
                     } else {
                         $type = \PDO::PARAM_STR;
                     }
@@ -328,8 +328,8 @@ class Query
                 // We MUST fill in the non null columns, with exception on the auto increment column
                 if (! $currentColumn->null && ! $currentColumn->autoIncrement) {
                     if (! isset($data[$currentColumn->name])) {
-                        $this->exception = new QueryException("Inserting data failed, data must contain all non-null columns defined in the entity!", 0, $this->exception);
-                        return $this;
+                        $this->exception = new QueryException("Inserting data failed, data must contain all non-null columns defined in the entity!", 0, $this->exception); // @codeCoverageIgnore
+                        return $this; // @codeCoverageIgnore
                     }
                 }
             }

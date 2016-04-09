@@ -98,7 +98,7 @@ class RelationIndexer implements Indexer
         $reflection = null;
         try {
             $reflection = new \ReflectionClass($to);
-        }catch(\Exception $e) {
+        }catch(\Exception $e) { // @codeCoverageIgnore
             // Ignore, we will throw error on the next if.
         }
         if ($reflection === null || ! $reflection->isSubclassOf(Entity::class)) {
@@ -131,7 +131,7 @@ class RelationIndexer implements Indexer
         $reflection = null;
         try {
             $reflection = new \ReflectionClass($to);
-        }catch(\Exception $e) {
+        }catch(\Exception $e) { // @codeCoverageIgnore
             // Ignore, we will throw error on the next if.
         }
         if ($reflection === null || ! $reflection->isSubclassOf(Entity::class)) {

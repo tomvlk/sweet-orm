@@ -27,6 +27,7 @@ class QueryGenerator
      * Set if we are going to verify the columns
      *
      * @param bool $verify
+     * @codeCoverageIgnore
      */
     public function setVerify($verify)
     {

@@ -10,6 +10,7 @@ namespace SweetORM\Tests\Structure;
 
 use SweetORM\EntityManager;
 use SweetORM\Structure\Validator\ValidationResult;
+use SweetORM\Tests\Models\ConstraintTest;
 use \SweetORM\Tests\Models\Post;
 use \SweetORM\Tests\Models\Category;
 use SweetORM\Tests\Models\Student;
@@ -30,12 +31,14 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @covers \SweetORM\EntityManager::getEntityStructure
      * @covers \SweetORM\EntityManager::validator
      * @covers \SweetORM\Entity::validator
+     * @covers \SweetORM\Structure\Indexer\ColumnIndexer
      * @covers \SweetORM\Structure\EntityStructure
      * @covers \SweetORM\Structure\ValidationManager
      * @covers \SweetORM\Structure\ValidationManager::validator
      * @covers \SweetORM\Structure\Validator\Validator
      * @covers \SweetORM\Structure\Validator\ArrayValidator
      * @covers \SweetORM\Structure\Annotation\Constraint
+     * @covers \SweetORM\Database\Query
      */
     public function testArrayValidation()
     {
@@ -135,6 +138,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             'boolean' => true // Valid!
         );
         $result9 = TypeTest::validator($array9)->test();
+        $this->assertTrue($result9->isSuccess());
     }
 
 
@@ -144,6 +148,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @covers \SweetORM\EntityManager::getInstance
      * @covers \SweetORM\EntityManager::getEntityStructure
      * @covers \SweetORM\EntityManager::validator
+     * @covers \SweetORM\Structure\Indexer\ColumnIndexer
      * @covers \SweetORM\Entity::validator
      * @covers \SweetORM\Structure\EntityStructure
      * @covers \SweetORM\Structure\ValidationManager
@@ -151,6 +156,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @covers \SweetORM\Structure\Validator\Validator
      * @covers \SweetORM\Structure\Validator\ArrayValidator
      * @covers \SweetORM\Structure\Annotation\Constraint
+     * @covers \SweetORM\Database\Query
      */
     public function testArrayFilling()
     {
@@ -190,5 +196,117 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Category::class, $entity3);
         $this->assertEquals('Test Category, Filling in.', $entity3->name);
         $this->assertEquals('Description is filled in!', $entity3->description);
+    }
+
+
+    /**
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\EntityManager::getInstance
+     * @covers \SweetORM\EntityManager::getEntityStructure
+     * @covers \SweetORM\EntityManager::validator
+     * @covers \SweetORM\Entity::validator
+     * @covers \SweetORM\Structure\EntityStructure
+     * @covers \SweetORM\Structure\ValidationManager
+     * @covers \SweetORM\Structure\ValidationManager::validator
+     * @covers \SweetORM\Structure\Validator\Validator
+     * @covers \SweetORM\Structure\Validator\ArrayValidator
+     * @covers \SweetORM\Structure\Annotation\Constraint
+     * @covers \SweetORM\Structure\Indexer\ColumnIndexer
+     * @covers \SweetORM\Database\Query
+     */
+    public function testConstraints()
+    {
+        $manager = EntityManager::getInstance();
+        $manager->clearRegisteredEntities();
+
+        $array = array(
+            'startsWith' => 'www.google.com' // Is not above 20! Fail!
+        );
+        $result = ConstraintTest::validator($array)->test();
+        $this->assertFalse($result->isSuccess());
+
+
+        $array = array(
+            'startsWith' => 'www.google.com/testi' // Is 20, success!
+        );
+        $result = ConstraintTest::validator($array)->test();
+        $this->assertTrue($result->isSuccess());
+
+        $array = array(
+            'startsWith' => 'www.google.com/testi' // Is 20 length
+        );
+        $result = ConstraintTest::validator($array)->test();
+        $this->assertTrue($result->isSuccess());
+
+        $array = array(
+            'startsWith' => 'www.google.com/testin' // Is 21 length
+        );
+        $result = ConstraintTest::validator($array)->test();
+        $this->assertTrue($result->isSuccess());
+
+        $array = array(
+            'startsWith' => 'ww.google.com/testin' // Is 20 length but doesnt start with www. => fail!
+        );
+        $result = ConstraintTest::validator($array)->test();
+        $this->assertFalse($result->isSuccess());
+
+
+
+        $result = ConstraintTest::validator(array('question' => 'noo'))->test();
+        $this->assertFalse($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('question' => 'YES'))->test();
+        $this->assertFalse($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('question' => 'no'))->test();
+        $this->assertTrue($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('question' => 'yes'))->test();
+        $this->assertTrue($result->isSuccess());
+
+
+
+        $result = ConstraintTest::validator(array('between' => 44.49))->test();
+        $this->assertFalse($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('between' => 44.5))->test();
+        $this->assertTrue($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('between' => 55.5))->test();
+        $this->assertTrue($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('between' => 55.51))->test();
+        $this->assertFalse($result->isSuccess());
+
+
+        $result = ConstraintTest::validator(array('endsWith' => 'www.test.com'))->test();
+        $this->assertTrue($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('endsWith' => 'www.whereisgoogle.com'))->test();// == 21 chars
+        $this->assertFalse($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('endsWith' => 'www.hereisgoogle.com'))->test();// == 20 chars
+        $this->assertTrue($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('endsWith' => 'www.test.nl'))->test(); // != .com
+        $this->assertFalse($result->isSuccess());
+
+
+        $result = ConstraintTest::validator(array('youtube' => 'www.test.nl'))->test();
+        $this->assertFalse($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('youtube' => 'https://youtu.be'))->test();
+        $this->assertFalse($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('youtube' => 'https://youtu.be/dQw4w9WgXcQ'))->test();
+        $this->assertTrue($result->isSuccess());
+
+
+        $result = ConstraintTest::validator(array('url' => 'https://youtu.be/dQw4w9WgXcQ'))->test();
+        $this->assertTrue($result->isSuccess());
+
+        $result = ConstraintTest::validator(array('url' => 'dQw4w9WgXcQ'))->test();
+        $this->assertFalse($result->isSuccess());
+
     }
 }

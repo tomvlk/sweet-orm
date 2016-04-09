@@ -31,10 +31,29 @@ class Constraint implements BaseAnnotation
     public $maxLength;
 
     /**
+     * Minimum value (only for numeric values).
+     * @var mixed
+     */
+    public $minValue;
+
+    /**
+     * Maximum value (only for numeric values).
+     * @var mixed
+     */
+    public $maxValue;
+
+    /**
      * @var string
      * @Enum({"email","url"})
      */
     public $valid;
+
+    /**
+     * Regular expression. '/your-expression/'
+     * Use {} brackets to not escape your docblock!
+     * @var string
+     */
+    public $regex;
 
     /**
      * Must be one of the options provided.
@@ -75,14 +94,30 @@ class Constraint implements BaseAnnotation
             $error[] = 'maximum length';
         }
 
+        // var_dump(array('cur' => $value, 'min' => $this->minValue));
+        if ($this->minValue !== null && (! is_numeric($value) || ! ($value >= $this->minValue))) {
+            $valid = false;
+            $error[] = 'minimum value';
+        }
+
+        if ($this->maxValue !== null && (! is_numeric($value) || ! ($value <= $this->maxValue))) {
+            $valid = false;
+            $error[] = 'maximum value';
+        }
+
         if ($this->startsWith !== null && ! (strpos($value, $this->startsWith) === 0)) {
             $valid = false;
             $error[] = 'starts with';
         }
 
-        if ($this->startsWith !== null && ! (strpos($value, $this->startsWith) === strlen($value)-strlen($this->startsWith))) {
+        if ($this->endsWith !== null && ! (strpos($value, $this->endsWith) === strlen($value)-strlen($this->endsWith))) {
             $valid = false;
             $error[] = 'ends with';
+        }
+
+        if ($this->regex !== null && ! preg_match($this->regex, $value)) {
+            $valid = false;
+            $error[] = 'valid custom field';
         }
 
         if ($this->enum !== null && is_array($this->enum)) {
@@ -95,15 +130,19 @@ class Constraint implements BaseAnnotation
         if ($this->valid !== null) {
             switch ($this->valid) {
                 case 'email':
-                    if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                    if (! filter_var($value, FILTER_VALIDATE_EMAIL))
                         $valid = false;
-                        $error[] = 'valid \'email\'';
-                    }
+                    break;
+                case 'url':
+                    if (! filter_var($value, FILTER_VALIDATE_URL))
+                        $valid = false;
                     break;
                 default:
                     $valid = false;
-                    $error[] = 'invalid valid type';
             }
+        }
+        if (! $valid) {
+            $error[] = 'valid \'' . $this->valid . '\'';
         }
 
         return $valid === true ? true : $error;
