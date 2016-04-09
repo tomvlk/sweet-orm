@@ -1,4 +1,4 @@
-# SweetORM 
+# SweetORM
 [![Build Status](https://travis-ci.org/tomvlk/sweet-orm.svg)](https://travis-ci.org/tomvlk/sweet-orm) [![Coverage Status](https://coveralls.io/repos/tomvlk/sweet-orm/badge.svg?branch=master&service=github)](https://coveralls.io/github/tomvlk/sweet-orm?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/grade/b90c424851234082a43a0c0c94de7922)](https://www.codacy.com/app/tomvalk/sweet-orm) [![Codacy Badge](https://api.codacy.com/project/badge/coverage/b90c424851234082a43a0c0c94de7922)](https://www.codacy.com/app/tomvalk/sweet-orm) [![Latest Stable Version](https://poser.pugx.org/tomvlk/sweet-orm/v/stable)](https://packagist.org/packages/tomvlk/sweet-orm) [![Latest Unstable Version](https://poser.pugx.org/tomvlk/sweet-orm/v/unstable)](https://packagist.org/packages/tomvlk/sweet-orm) [![License](https://poser.pugx.org/tomvlk/sweet-orm/license)](https://packagist.org/packages/tomvlk/sweet-orm) [![Build Time](https://buildtimetrend.herokuapp.com/badge/tomvlk/sweet-orm)](https://buildtimetrend.herokuapp.com/dashboard/tomvlk/sweet-orm)
 
 Simple and PHP orm, without having to use command line generators and migrators, can work on your existing table structure.
@@ -164,3 +164,126 @@ $category->delete();
 ## Query Builder
 For finding the entity you could use the Query Builder. This will interactively build a SQL Query without knowing the exact syntax for the database.
 
+### Selecting Entity
+Selecting entity with several query builder operations:
+
+```php
+$category = Category::find()->where('name', 'News')->one();
+```
+This is the same as the following query:
+```sql
+SELECT * FROM category WHERE name = 'News' LIMIT 1;
+```
+
+### Builder Methods
+Methods to build your query:
+
+```php
+$query = Category::find();
+
+$query->select();
+$query->select('id name'); // Only fetch id and name column (not property!).
+
+$query->from('table'); // Select from table (not needed when using entity!)
+
+$query->where('column', '=', 'value'); // Middle is optional, default '='.
+$query->where(array('column' => 'value', 'column2' => array('=' => 'vallue2'))); // Complex where.
+
+$query->limit(50); // Limit by 50 rows
+$query->offset(10); // Offset by 10.
+
+$query->all(); // Execute query, fetchAll.
+$query->one(); // Execute query, fetch first row.
+
+
+// Write,update,delete
+$query->insert('table'); // Insert into table.
+$query->into('table'); // optional!
+$query->values(array('column' => 'value')); // Set insert data.
+$query->apply(); // boolean
+
+$query->update('table');
+$query->set(array('column' => 'value')); // Set new data.
+$query->where('id', 1);
+$query->apply();
+
+$query->delete('table');
+$query->where('id', 1);
+$query->apply();
+```
+
+Of course you can chain all operations on the query builder.
+
+
+## Validation and filling
+Validation against null and non-null, types and constraints (defined as annotations) could make using the ORM in REST environments way better.
+
+### Define constraints
+```php
+class Test extends Entity {
+    /**
+     * @var string
+     * @Column(type="string", null=true)
+     * @Constraint(
+     *     startsWith="www.",           <== Constraint for starting string.
+     *     minLength=20                 <== Minimum string length.
+     * )
+     */
+    public $longUrl;
+}
+```
+
+You can use the following constraints:
+
+- minLength: Minimum character length. Number.
+- maxLength: Maximum character length. Number.
+- minValue: Minimum int/float/double value to test against. Number.
+- maxValue: Maximum int/float/double value to test against. Number.
+- valid: Validate special cases. Can be 'email', 'url'. String.
+- regex: Regular expression, will be tested against preg_match(). String.
+- enum: Must be in the array given. Array of strings.
+- startsWith: Test if string starts with. String
+- endsWith: Test if string ends with. String
+
+
+### Test constraints and requirements
+
+```php
+    // We are going to use the ArrayValidator (will be selected automatically)
+    $data = array(
+        'longUrl' => 'www.verylongurlthatvalidatescorrectly.com'
+    );
+    $result = Test::validator($data)->test();
+
+    $result->isSuccess(); // true
+    $result->getErrors(); // empty array.
+```
+
+
+### Filling and creating entities with raw data
+
+Creating from the validator:
+```php
+    // We are going to use the ArrayValidator (will be selected automatically)
+    $data = array(
+        'longUrl' => 'www.verylongurlthatvalidatescorrectly.com'
+    );
+    $entity = Test::validator($data)->create(); // Entity = instance of Test.
+
+    $entity->save(); // true
+```
+
+
+Update with data provided by the validator
+```php
+    // We are going to use the ArrayValidator (will be selected automatically)
+    $entity = Test::get(1); // Instance of already existing test entity.
+
+    $data = array(
+        'longUrl' => 'www.verylongurlthatvalidatescorrectly2.com'
+    );
+    Test::validator($data)->fill($entity); // Entity = instance of Test.
+
+    $entity->save(); // true, is now updated!
+```
+_Remember, by default the primary key(s) can't be overwritten by validator data!_

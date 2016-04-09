@@ -168,7 +168,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
         );
 
         $entity1 = new Category();
-        $result1 = Category::validator($array1)->fill($entity1, $array1);
+        $result1 = Category::validator($array1)->fill($entity1);
 
         $this->assertInstanceOf(ValidationResult::class, $result1);
         $this->assertFalse($result1->isSuccess());
