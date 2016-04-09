@@ -10,6 +10,8 @@ require_once __DIR__ . '/Annotation/EntityClass.php';
 require_once __DIR__ . '/Annotation/Column.php';
 require_once __DIR__ . '/Annotation/Table.php';
 
+require_once __DIR__ . '/Annotation/Constraint.php';
+
 require_once __DIR__ . '/Annotation/OneToOne.php';
 require_once __DIR__ . '/Annotation/OneToMany.php';
 require_once __DIR__ . '/Annotation/ManyToOne.php';
