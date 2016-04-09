@@ -11,6 +11,7 @@ namespace SweetORM\Structure\Validator;
 /**
  * Class ValidationResult
  * @package SweetORM\Structure\Validator
+ * @codeCoverageIgnore
  */
 class ValidationResult
 {

@@ -120,6 +120,21 @@ abstract class Validator
             return 'Given data for column \'' . $column->name . '\' has a wrong type. Must be \'' . $column->type . '\' and \'' . gettype($value) . '\' is given!';
         }
 
-        return true;
+        // Validate constraints if they are given
+        if ($column->constraint === null) {
+            return true; // Skip if there are no constraints.
+        }
+
+        // Validate constraints
+        $constraintValid = $column->constraint->valid($value);
+        if ($constraintValid === true) {
+            return true;
+        }
+        return 'Constraints failed for column \'' . $column->name . '\': ' . implode(', ', $constraintValid);
+    }
+
+    protected function fillColumn (Entity $entity, Column $column, $value, $options = array())
+    {
+
     }
 }

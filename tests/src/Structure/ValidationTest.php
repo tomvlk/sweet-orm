@@ -12,6 +12,7 @@ use SweetORM\EntityManager;
 use SweetORM\Structure\Validator\ValidationResult;
 use \SweetORM\Tests\Models\Post;
 use \SweetORM\Tests\Models\Category;
+use SweetORM\Tests\Models\Student;
 
 /**
  * Class ValidationTest
@@ -33,16 +34,17 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @covers \SweetORM\Structure\ValidationManager::validator
      * @covers \SweetORM\Structure\Validator\Validator
      * @covers \SweetORM\Structure\Validator\ArrayValidator
+     * @covers \SweetORM\Structure\Annotation\Constraint
      */
     public function testArrayValidation()
     {
         $manager = EntityManager::getInstance();
         $manager->clearRegisteredEntities();
-        
+
         $array1 = array(
             'tests' => 'nope'
         );
-        
+
         $result1 = Category::validator($array1)->test();
 
         $this->assertInstanceOf(ValidationResult::class, $result1);
@@ -72,6 +74,15 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
         $result3 = Category::validator($array3)->test();
         $this->assertInstanceOf(ValidationResult::class, $result3);
         $this->assertTrue($result3->isSuccess());
+
+
+        $array4 = array(
+            'name' => 'Henk',
+            'email' => 'invalid'
+        );
+        $result4 = Student::validator($array4)->test();
+        $this->assertInstanceOf(ValidationResult::class, $result4);
+        $this->assertFalse($result4->isSuccess());
     }
 
 

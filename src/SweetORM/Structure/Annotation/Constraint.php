@@ -53,4 +53,59 @@ class Constraint implements BaseAnnotation
      * @var string
      */
     public $endsWith;
+
+
+    /**
+     * Validate constraints.
+     * @param $value
+     * @return true|array True on success, error will give array that contains error messages.
+     */
+    public function valid ($value)
+    {
+        $valid = true;
+        $error = array();
+
+        if ($this->minLength !== null && ! (strlen($value) >= $this->minLength)) {
+            $valid = false;
+            $error[] = 'minimum length';
+        }
+
+        if ($this->maxLength !== null && ! (strlen($value) <= $this->maxLength)) {
+            $valid = false;
+            $error[] = 'maximum length';
+        }
+
+        if ($this->startsWith !== null && ! (strpos($value, $this->startsWith) === 0)) {
+            $valid = false;
+            $error[] = 'starts with';
+        }
+
+        if ($this->startsWith !== null && ! (strpos($value, $this->startsWith) === strlen($value)-strlen($this->startsWith))) {
+            $valid = false;
+            $error[] = 'ends with';
+        }
+
+        if ($this->enum !== null && is_array($this->enum)) {
+            if (! in_array($value, $this->enum)) {
+                $valid = false;
+                $error[] = 'is value of list';
+            }
+        }
+
+        if ($this->valid !== null) {
+            switch ($this->valid) {
+                case 'email':
+                    if (! filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                        $valid = false;
+                        $error[] = 'valid \'email\'';
+                    }
+                    break;
+                default:
+                    $valid = false;
+                    $error[] = 'invalid valid type';
+            }
+        }
+
+        return $valid === true ? true : $error;
+    }
 }

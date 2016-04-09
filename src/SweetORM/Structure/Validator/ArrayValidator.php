@@ -28,8 +28,8 @@ class ArrayValidator extends Validator
      */
     public function test($options = array())
     {
-        if (! is_array($this->data)) {
-            return new ValidationResult(false, array('No valid data given!'), 'No valid data type given!');
+        if (! is_array($this->data)) { // @codeCoverageIgnore
+            return new ValidationResult(false, array('No valid data given!'), 'No valid data type given!'); // @codeCoverageIgnore
         }
         $columns = $this->structure->columns;
 
