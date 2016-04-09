@@ -77,7 +77,7 @@ abstract class Validator
      * @param array $options Options for validating.
      * @return true|string True on success, string with error on failure.
      */
-    protected function validateColumn (Column $column, $value = null, array $options)
+    protected function validateColumn (Column $column, $value = null, array $options = array())
     {
         if ($value === null && $column->null) {
             return true; // Allowed to be null!
@@ -150,7 +150,7 @@ abstract class Validator
      *
      * @return true|array True on success, array with strings (failed validation).
      */
-    protected function fillColumn (Entity $entity, Column $column, $value, $validation = true, $options = array())
+    protected function fillColumn (Entity $entity, Column $column, $value, $validation = true, array $options = array())
     {
         if ($entity->_saved && $column->primary) return true; // Skip replacing the primary key.
         if (! $entity->_saved && $column->primary &&
