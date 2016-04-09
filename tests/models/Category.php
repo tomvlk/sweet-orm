@@ -42,6 +42,11 @@ class Category extends Entity
      */
     public $description;
 
+    /**
+     * @var string
+     * @Column(type="date", default="{{CURRENT_TIME}}")
+     */
+    public $created;
 
 
     // One To Many relationship

@@ -56,7 +56,8 @@ class ArrayValidator extends Validator
      */
     public function create($options = array())
     {
-        // TODO: Implement create() method.
+        $clazz = $this->structure->name;
+        return $this->fill(new $clazz(), $options);
     }
 
     /**
@@ -71,6 +72,16 @@ class ArrayValidator extends Validator
      */
     public function fill(Entity &$entity, $options = array())
     {
-        // TODO: Implement fill() method.
+        $validateResults = $this->test($options);
+        if (! $validateResults->isSuccess()) {
+            return $validateResults;
+        }
+
+        $columns = $this->structure->columns;
+        foreach ($columns as $col) { /** @var Column $col */
+            $value = isset($this->data[$col->name]) ? $this->data[$col->name] : null;
+            $this->fillColumn($entity, $col, $value, false, $options);
+        }
+        return $entity;
     }
 }

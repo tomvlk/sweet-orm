@@ -85,6 +85,9 @@ abstract class Validator
         if ($value === null && $column->primary && $column->autoIncrement) {
             return true; // Auto Increment on PK.
         }
+        if ($value === null && $column->default) {
+            return true; // Has Default value.
+        }
         if ($value === null) {
             return 'Column \'' . $column->name . '\' cannot be empty or null!';
         }
@@ -99,6 +102,9 @@ abstract class Validator
             case 'integer':
                 $typeValid = is_int($value);
                 break;
+            case 'bool':
+                $typeValid = is_bool($value);
+                break;
             case 'float':
                 $typeValid = is_float($value);
                 break;
@@ -108,7 +114,7 @@ abstract class Validator
             case 'date':
                 $typeValid = is_string($value) || is_int($value);
                 // Could be string or integer format. If not blocked, also check date itself.
-                if (! isset($options['datevalidation']) || ! $options['datevalidation']) {
+                if (is_string($value) && (! isset($options['datevalidation']) || ! $options['datevalidation'])) {
                     $typeValid = strtotime($value) !== false;
                 }
                 break;
@@ -133,8 +139,30 @@ abstract class Validator
         return 'Constraints failed for column \'' . $column->name . '\': ' . implode(', ', $constraintValid);
     }
 
-    protected function fillColumn (Entity $entity, Column $column, $value, $options = array())
+    /**
+     * Validate and (if successful) enter the value to the entity instance.
+     *
+     * @param Entity $entity Entity Instance
+     * @param Column $column Column annotation data.
+     * @param mixed $value Value.
+     * @param boolean $validation Validate before filling. Enabled by default, disable when already validated.
+     * @param array $options Options.
+     *
+     * @return true|array True on success, array with strings (failed validation).
+     */
+    protected function fillColumn (Entity $entity, Column $column, $value, $validation = true, $options = array())
     {
-
+        if ($validation) {
+            // @codeCoverageIgnoreStart
+            $valid = $this->validateColumn($column, $value, $options);
+            if ($valid === true) {
+                $entity->{$column->propertyName} = $value;
+                return true;
+            }
+            return $valid;
+            // @codeCoverageIgnoreEnd
+        }
+        $entity->{$column->propertyName} = $value;
+        return true;
     }
 }

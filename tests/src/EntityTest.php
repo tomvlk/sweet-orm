@@ -584,7 +584,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Site news.', $cat1['description']);
         $this->assertEquals(1, $cat1['id']);
         $this->assertEquals(array('id' => 2), $cat2);
-        $this->assertEquals(array('id' => '3','name' => 'FAQ','description' => 'FAQ Posts'), $cat3);
+        $this->assertEquals(array('id' => '3','name' => 'FAQ','description' => 'FAQ Posts', 'created' => $cat3['created']), $cat3);
         $this->assertFalse($catnone);
     }
 }
