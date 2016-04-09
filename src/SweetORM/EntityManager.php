@@ -16,6 +16,8 @@ use SweetORM\Structure\Annotation\JoinTable;
 use SweetORM\Structure\EntityStructure;
 use SweetORM\Structure\Indexer\EntityIndexer;
 use SweetORM\Structure\RelationManager;
+use SweetORM\Structure\ValidationManager;
+use SweetORM\Structure\Validator\Validator;
 
 class EntityManager
 {
@@ -368,6 +370,18 @@ class EntityManager
         $column = self::getInstance()->getEntityStructure($entity)->primaryColumn;
         $query->where($column->name, $primaryValue);
         return $query->one();
+    }
+
+    /**
+     * Get Validator class for data type.
+     *
+     * @param string $entity
+     * @param mixed $data
+     * @return Validator|false
+     */
+    public function validator($entity, $data)
+    {
+        return ValidationManager::validator(self::getInstance()->getEntityStructure($entity), $data);
     }
 
     /** ====== **/

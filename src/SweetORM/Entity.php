@@ -127,6 +127,17 @@ abstract class Entity
     }
 
     /**
+     * Get validator and filler class for provided data.
+     *
+     * @param mixed $data
+     * @return Structure\Validator\Validator|false
+     */
+    public static function validator($data)
+    {
+        return EntityManager::getInstance()->validator(static::class, $data);
+    }
+
+    /**
      * Clear Lazy Fetching cache, will force to reload relationship entities.
      * You must call this when you expect new data from the database!
      */
