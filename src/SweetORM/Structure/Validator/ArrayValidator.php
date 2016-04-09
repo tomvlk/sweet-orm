@@ -37,49 +37,11 @@ class ArrayValidator extends Validator
         $success = true;
 
         foreach ($columns as $col) { /** @var Column $col */
-
-            if (isset($this->data[$col->name])) {
-                if (! $col->null && $this->data[$col->name] === null) {
-                    $success = false;
-                    $errors[] = 'Column \'' . $col->name . '\' could not be empty!';
-                } else {
-                    // Check types.
-                    $typeFailed = false;
-
-                    switch ($col->type) {
-                        case 'string'||'text':
-                            $typeFailed = is_string($this->data[$col->name]);
-                            break;
-                        case 'integer':
-                            $typeFailed = is_integer($this->data[$col->name]);
-                            break;
-                        case 'float':
-                            $typeFailed = is_float($this->data[$col->name]);
-                            break;
-                        case 'double':
-                            $typeFailed = is_double($this->data[$col->name]);
-                            break;
-                        case 'date':
-                            $typeFailed = is_string($this->data[$col->name]) || is_int($this->data[$col->name]);
-                            // Could be string or integer format. If not blocked, also check date itself.
-                            if (! isset($options['datevalidation']) || ! $options['datevalidation']) {
-                                $typeFailed = strtotime($this->data[$col->name]) !== false;
-                            }
-                            break;
-                        default:
-                            $typeFailed = false;
-                            break;
-                    }
-
-                    if (! $typeFailed) {
-                        $success = false;
-                        $errors[] = 'Given data for column \'' . $col->name . '\' has a wrong type. Must be \'' . $col->type . '\'';
-                    }
-                }
-            } elseif (! $col->null && ! $col->primary && ! $col->default) {
+            $status = $this->validateColumn($col, isset($this->data[$col->name]) ? $this->data[$col->name] : null, $options);
+            if ($status !== true) {
                 $success = false;
-                $errors[] = 'Column \'' . $col->name . '\' could not be empty!';
-            }// else success!
+                $errors[] = $status;
+            }
         }
         return new ValidationResult($success, $errors, $success ? null : 'Errors happend, check the errors array!');
     }

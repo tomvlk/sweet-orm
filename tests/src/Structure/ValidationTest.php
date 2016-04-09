@@ -51,6 +51,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
 
 
         $array2 = array(
+            'id' => 55,
             'name' => 0,
             'description' => null
         );
