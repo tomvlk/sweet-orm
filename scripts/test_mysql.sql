@@ -47,7 +47,7 @@ DROP TABLE IF EXISTS `student`;
 CREATE TABLE IF NOT EXISTS `student` (
   `id` int(11) NOT NULL,
   `name` varchar(255) CHARACTER SET latin1 NOT NULL
-  `email` varchar(255) CHARACTER SET latin1
+  `email` varchar(255) CHARACTER SET latin1 DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `student_courses`;
