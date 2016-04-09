@@ -8,6 +8,7 @@
 
 namespace SweetORM\Structure\Validator;
 use SweetORM\Entity;
+use SweetORM\Structure\Annotation\Column;
 use SweetORM\Structure\EntityStructure;
 
 /**

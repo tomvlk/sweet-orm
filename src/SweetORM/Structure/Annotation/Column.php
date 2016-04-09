@@ -63,6 +63,14 @@ class Column implements BaseAnnotation
     public $propertyName;
 
 
+    /**
+     * READ ONLY!
+     *
+     * Constraint if provided will be set here.
+     *
+     * @var Constraint|null
+     */
+    public $constraint;
 
 
 

@@ -11,6 +11,7 @@ namespace SweetORM\Structure\Indexer;
 use Doctrine\Common\Annotations\AnnotationReader;
 use SweetORM\Exception\InvalidAnnotationException;
 use SweetORM\Structure\Annotation\Column;
+use SweetORM\Structure\Annotation\Constraint;
 use SweetORM\Structure\EntityStructure;
 
 /**
@@ -68,6 +69,12 @@ class ColumnIndexer implements Indexer
 
                 // Set property name
                 $column->propertyName = $property->getName();
+
+                // Fetch constraint if provided
+                $constraint = $this->reader->getPropertyAnnotation($property, Constraint::class);
+                if ($constraint !== null && $constraint instanceof Constraint) {
+                    $column->constraint = $constraint;
+                }
 
                 // Save column
                 $structure->columnNames[] = $column->name;
