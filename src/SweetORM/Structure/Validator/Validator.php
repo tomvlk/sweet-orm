@@ -152,6 +152,11 @@ abstract class Validator
      */
     protected function fillColumn (Entity $entity, Column $column, $value, $validation = true, $options = array())
     {
+        if ($entity->_saved && $column->primary) return true; // Skip replacing the primary key.
+        if (! $entity->_saved && $column->primary &&
+            ! (isset($options['allowPrimary']) && $options['allowPrimary']))
+            return true; // Skip if not allowed + is primary + is AI.
+
         if ($validation) {
             // @codeCoverageIgnoreStart
             $valid = $this->validateColumn($column, $value, $options);
