@@ -46,6 +46,8 @@ class ConnectionManager
     public static function injectConnection(\PDO $connection)
     {
         self::$connection = $connection;
+        // Register annotations when not yet done
+        Configuration::registerAnnotations();
     }
 
     /**

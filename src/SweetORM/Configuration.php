@@ -50,6 +50,19 @@ class Configuration
     }
 
     /**
+     * Register annotations when not yet done.
+     */
+    public static function registerAnnotations ()
+    {
+        // Check if we need to register the Annotations
+        if (!self::$registered) {
+            AnnotationRegistry::registerFile(__DIR__ . '/Structure/SweetAnnotations.php');
+            self::$registered = true;
+        }
+    }
+
+
+    /**
      * Get configuration value.
      *
      * @param string $key
