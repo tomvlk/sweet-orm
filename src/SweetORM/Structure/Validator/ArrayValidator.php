@@ -57,7 +57,8 @@ class ArrayValidator extends Validator
     public function create($options = array())
     {
         $clazz = $this->structure->name;
-        return $this->fill(new $clazz(), $options);
+        $instance = new $clazz();
+        return $this->fill($instance, $options);
     }
 
     /**
