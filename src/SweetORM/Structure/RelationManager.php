@@ -246,8 +246,10 @@ class RelationManager
             $solverName = join('', array_slice(explode("\\", get_class($relation)), -1));
             $class = "\\SweetORM\\Database\\Solver\\" . $solverName;
 
+            $query = new Query($relation->targetEntity, false);
+
             /** @var Solver $solver */
-            $solver = new $class($relation, $this->structure, new Query($relation->targetEntity, false));
+            $solver = new $class($relation, $this->structure, $query);
 
             // Lets call the solver to solve this save relation problem
             $solver->solveSave($this->entity, $value);
