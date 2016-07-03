@@ -36,6 +36,33 @@ class QueryGenerator
 
 
     /**
+     * Generate Joins
+     *
+     * @param array $joins
+     * @param string $join
+     */
+    public function generateJoin($joins, &$join)
+    {
+        $join = "";
+
+        if (count($joins) == 0) return;
+
+        foreach ($joins as $joinEntry) {
+            $table = $joinEntry['table'];
+            $on = $joinEntry['on'];
+            $alias = $joinEntry['alias'];
+            $type = $joinEntry['type'];
+
+            $join .= "$type $table ";
+            if ($alias !== null) $join .= " $alias ";
+            $join .= " ON $on ";
+
+            $join .= " ";
+        }
+    }
+
+
+    /**
      * Generate Where clause
      *
      * @param array $conditions

@@ -66,6 +66,7 @@ class Query
     private $start = "";
     private $table = "";
     private $data = "";
+    private $join = "";
     private $where = "";
     private $order = "";
     private $limit = "";
@@ -82,6 +83,8 @@ class Query
     private $limitCount = null;
     /** @var null|int */
     private $limitOffset = null;
+    /** @var array */
+    private $joinTables = array();
     /** @var null|string */
     private $sortBy = null;
     /** @var null|string */
@@ -92,6 +95,8 @@ class Query
     /* ===== Storage for Binding ===== */
     private $bindValues = array();
     private $bindTypes = array();
+
+    private $fetchAssoc = false;
 
 
     /**
@@ -422,7 +427,7 @@ class Query
             }
 
             // Validate compare, validate column name
-            if ($this->verify && ! in_array($column, $columnNames)) {
+            if ($this->verify && ! in_array($column, $columnNames) && ! strstr($column, '.')) { // Ignore . in column names (advanced mode).
                 $this->exception = new QueryException("Trying to prepare a where with column condition for a undefined column! ('".$column."', table '".$this->table."')", 0, $this->exception);
                 continue;
             }
@@ -444,6 +449,33 @@ class Query
         return $this;
     }
 
+    /**
+     * Join tables in query.
+     * WARNING: on clause, table name, alias and type is NOT escaped!
+     *
+     * @param string $table Table to join.
+     * @param string $on on clause.
+     * @param string $type Type of join. Driver dependent. Default is 'JOIN'.
+     * @param string $as Optional alias.
+     *
+     * @return Query $this The current query stack.
+     */
+    public function join($table, $on, $type = 'join', $as = null)
+    {
+        if (! is_string($table) || ! is_string($on)) {
+            $this->exception = new QueryException('Joins should contain table,on in string format!', 0, $this->exception);
+            return $this;
+        }
+
+        $this->joinTables[] = array(
+            'table' => $table,
+            'on' => $on,
+            'type' => $type,
+            'alias' => $as
+        );
+
+        return $this;
+    }
 
     /**
      * Limit the result
@@ -522,6 +554,16 @@ class Query
         return $this;
     }
 
+    /**
+     * Fetch assoc array.
+     * @return Query $this Current query context.
+     */
+    public function asArray()
+    {
+        $this->fetchAssoc = true;
+        return $this;
+    }
+
 
     /**
      * Execute Query and fetch all records as entities
@@ -534,7 +576,7 @@ class Query
             throw $this->exception;
         }
 
-        return $this->fetch(true);
+        return $this->fetch(true, $this->fetchAssoc);
     }
 
     /**
@@ -549,7 +591,7 @@ class Query
             throw $this->exception;
         }
 
-        return $this->fetch(false);
+        return $this->fetch(false, $this->fetchAssoc);
     }
 
     /**
@@ -571,12 +613,14 @@ class Query
 
 
     /**
-     * @param $multi
+     * @param boolean $multi
+     * @param boolean $array Fetch as array.
+     *
      * @return array|mixed
      *
      * @throws \Exception
      */
-    private function fetch($multi)
+    private function fetch($multi, $array = false)
     {
         // Let the generator do his work now,
         if ($this->queryType !== self::QUERY_SELECT) {
@@ -585,6 +629,9 @@ class Query
 
         $this->bindValues = array();
         $this->bindTypes = array();
+
+        // Join
+        $this->generator->generateJoin($this->joinTables, $this->join);
 
         // Where
         $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
@@ -612,16 +659,22 @@ class Query
         }
 
         // Set fetch mode
-        $query->setFetchMode(\PDO::FETCH_CLASS, $this->class);
+        if (! $array)
+            $query->setFetchMode(\PDO::FETCH_CLASS, $this->class);
+        else
+            $query->setFetchMode(\PDO::FETCH_ASSOC);
 
         // Execute
         $query->execute();
 
         // Fetch and return
-        if ($multi) {
-            return $this->injectState($query->fetchAll());
-        }
-        return $this->injectState($query->fetch());
+        $result = null;
+        if ($multi)
+            $result = $query->fetchAll();
+        else
+            $result = $query->fetch();
+        if ($array) return $result;
+        return $this->injectState($result);
     }
 
 
@@ -668,11 +721,13 @@ class Query
         }
 
         if ($this->queryType === self::QUERY_UPDATE) {
+            $this->generator->generateJoin($this->joinTables, $this->join);
             $this->generator->generateUpdate($this->changeData, $this->data, $this->bindValues, $this->bindTypes);
             $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
         }
 
         if ($this->queryType === self::QUERY_DELETE) {
+            $this->generator->generateJoin($this->joinTables, $this->join);
             $this->generator->generateWhere($this->whereConditions, $this->where, $this->bindValues, $this->bindTypes);
         }
 
@@ -781,6 +836,10 @@ class Query
         if ($this->queryType === self::QUERY_SELECT) {
             $this->query = "SELECT $this->start FROM $this->table";
 
+            if (! empty($this->join)) {
+                $this->query .= " $this->join ";
+            }
+
             if (! empty($this->where)) {
                 $this->query .= " WHERE $this->where";
             }
@@ -802,13 +861,25 @@ class Query
         if ($this->queryType === self::QUERY_UPDATE) {
             $this->query = "UPDATE $this->table SET $this->data";
 
+            if (! empty($this->join)) {
+                $this->query .= " $this->join ";
+            }
+
             if (! empty($this->where)) {
                 $this->query .= " WHERE $this->where";
             }
         }
 
         if ($this->queryType === self::QUERY_DELETE) {
-            $this->query = "DELETE FROM $this->table WHERE $this->where";
+            $this->query = "DELETE FROM $this->table ";
+
+            if (! empty($this->join)) {
+                $this->query .= " $this->join ";
+            }
+
+            if (! empty($this->where)) {
+                $this->query .= " WHERE $this->where";
+            }
         }
     }
 

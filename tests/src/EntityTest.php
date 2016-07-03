@@ -119,6 +119,12 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         }catch(QueryException $qe) {
             $this->assertTrue(true);
         }
+        try { // Invalid joining types
+            Category::find()->join(null, null, null)->one();
+            $this->assertTrue(false);
+        }catch(QueryException $qe) {
+            $this->assertTrue(true);
+        }
         // END FAIL TESTS
 
 
@@ -133,6 +139,21 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         // Where IN
         $all = Category::find()->where('id', 'IN', array(1,2))->all();
         $this->assertCount(2, $all);
+
+        // Joining
+        $all = Category::find()->join('post', 'post.categoryid = category.id')
+            ->select('post.*, category.*')
+            ->where('post.authorid', '2')
+            ->asArray()
+            ->all();
+        $this->assertCount(3, $all);
+
+        $all = Category::find()->join('post', 'pst.categoryid = category.id', 'JOIN', 'pst')
+            ->select('pst.*, category.*')
+            ->where('pst.authorid', '2')
+            ->asArray()
+            ->all();
+        $this->assertCount(3, $all);
 
 
         // Test with valid where, limit and offset in one
