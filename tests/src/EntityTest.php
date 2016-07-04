@@ -584,6 +584,33 @@ class EntityTest extends \PHPUnit_Framework_TestCase
             }
         }
         $this->assertTrue($found);
+
+        // Test deleting all and inserting none
+        RelationManager::clearCache();
+
+        $student = Student::get(2);
+        $student->courses->clear();
+
+        $student->save();
+
+        RelationManager::clearCache();
+
+        $student = Student::get(2);
+        $this->assertCount(0, $student->courses);
+
+        // Testing replacing all for one.
+        RelationManager::clearCache();
+
+        $student = Student::get(2);
+        $student->courses->clear();
+
+        $student->courses[] = Course::get(2);
+        $student->save();
+
+        RelationManager::clearCache();
+
+        $student = Student::get(2);
+        $this->assertCount(1, $student->courses);
     }
 
 
