@@ -51,10 +51,10 @@ class ManyToMany extends Solver
      */
     public function solveSave(Entity &$entity, &$value) // TODO: Refactor Query builder to be able to use it more often.
     {
-        // We are already sure that our value is filled with content.
-        // We only have to make it in sync with the database join table!
+        // We need to sync our collection with the jointable inbetween us.
+        // We can have some deleted ones in our collection, but we are not sure.
         /** @var JoinTable $joinTable */
-        $joinTable = $this->relation->join;
+        $joinTable = $this->relation->join; // Table to sync it to.
 
         // First we need to verify if we got an ArrayCollection here
         if (! $value instanceof ArrayCollection) {
@@ -68,6 +68,23 @@ class ManyToMany extends Solver
         $ourColumn = $joinTable->column->name;
         $targetColumn = $joinTable->targetColumn->name;
 
+        // Check if we only have an empty collection, then only delete from the joinTable
+        if ($value->count() === 0) {
+            // Only clear table contents (with join params)
+            $delete = EntityManager::query($entity, false)
+                ->delete($joinTable->name)
+                ->where($ourColumn, $currentId)
+                ->apply();
+
+            if ($delete === false) {
+                throw new RelationException("We can not solve the Many to Many relation save! Please verify your 
+                structure in PHP classes and the database for the join table. Delete problems (all delete)!");
+            }
+
+            return true; // Make sure we stop here, no inserts needed
+        }
+
+        // Parse all items in the collection, prepare the jointable inserts.
         foreach ($value as $item) {
             if (is_int($item)) {
                 // The user already gave us an ID only! Add it anyway
@@ -76,11 +93,14 @@ class ManyToMany extends Solver
             }
 
             if (! $item instanceof Entity) {
-                throw new RelationException("Values given in your '".$this->structure->name."' entity relation (many to many) should always be an ArrayCollection with inside ID's or Entities!");
+                throw new RelationException("Values given in your '".$this->structure->name."' entity relation 
+                (many to many) should always be an ArrayCollection with inside ID's or Entities!");
             }
 
             if ($item->_id === null) {
-                throw new RelationException("Entities given inside of your ArrayCollection for relations (entity: '".$this->structure->name."') should always be saved or fetched, current entity not saved/fetched!");
+                throw new RelationException("Entities given inside of your ArrayCollection for relations 
+                (entity: '".$this->structure->name."') should always be saved or fetched, 
+                current entity not saved/fetched!");
             }
 
             $insertIds[] = $item->_id;
@@ -88,9 +108,13 @@ class ManyToMany extends Solver
 
         // We have enough information, we need to sync the db with our ids.
         // Delete all current entries with our current id in it.
-        $delete = EntityManager::query($entity, false)->delete($joinTable->name)->where($ourColumn, $currentId)->apply();
+        $delete = EntityManager::query($entity, false)
+            ->delete($joinTable->name)
+            ->where($ourColumn, $currentId)
+            ->apply(); // This could be a bit better with syncing, instead of just replacing everything (TODO).
         if ($delete === false) {
-            throw new RelationException("We can not solve the Many to Many relation save! Please verify your structure in PHP classes and the database for the join table. Delete problems!");
+            throw new RelationException("We can not solve the Many to Many relation save! 
+            Please verify your structure in PHP classes and the database for the join table. Delete problems!");
         }
 
         $sql = "INSERT INTO $joinTable->name (`{$ourColumn}`, `{$targetColumn}`) VALUES ";
