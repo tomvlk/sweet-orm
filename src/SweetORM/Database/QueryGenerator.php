@@ -100,7 +100,7 @@ class QueryGenerator
                 foreach ($value as $subValue) {
 
                     $where .= "?";
-                    $values[] = $subValue;
+                    $values[] = $this->prepareData($subValue);
                     $types[] = $this->determinateType($subValue);
 
                     if (($subIdx+1) < $subMax) {
@@ -114,7 +114,7 @@ class QueryGenerator
                 $where .= "$operator ";
 
                 $where .= "?";
-                $values[] = $value;
+                $values[] = $this->prepareData($value);
                 $types[] = $this->determinateType($value);
             }
 
@@ -199,7 +199,7 @@ class QueryGenerator
 
             // Add to the values line
             $data .= "?";
-            $values[] = $changeData[$column->name];
+            $values[] = $this->prepareData($changeData[$column->name]);
             $types[] = $this->determinateType($changeData[$column->name]);
 
             // Adding ,
@@ -235,7 +235,7 @@ class QueryGenerator
         foreach ($changeData as $column => $value) {
             // Prepare set part
             $data .= "$column = ?";
-            $values[] = $value;
+            $values[] = $this->prepareData($value);
             $types[] = $this->determinateType($value);
 
             // Adding ,
@@ -270,4 +270,17 @@ class QueryGenerator
         return \PDO::PARAM_STR;
     }
 
+    /**
+     * Will parse any date or other data that needs manipulation before inserting/updating/selecting.
+     *
+     * @param mixed $value
+     * @return string
+     */
+    private function prepareData($value)
+    {
+        if ($value instanceof \DateTime)
+            return $value->format('c');
+
+        return $value;
+    }
 }
