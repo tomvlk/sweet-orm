@@ -289,6 +289,51 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($status);
     }
 
+    /**
+     * @covers \SweetORM\Entity
+     * @covers \SweetORM\EntityManager
+     * @covers \SweetORM\Database\Query
+     * @covers \SweetORM\Database\QueryGenerator
+     */
+    public function testRefresh()
+    {
+        Utilities::resetDatabase();
+
+        $post = new Post();
+        $post->categoryid = 1;
+        $post->authorid = 1;
+        $post->title = "Sample_Update_1";
+        $post->content = "Sample Insert 1";
+
+        $author = $post->author;
+
+        $status = $post->save();
+        $this->assertTrue($status);
+
+        // Fetch and edit somewhere else
+        /** @var Post $post2 */
+        $post2 = Post::get($post->_id);
+        $post2->content = 'Test OK';
+        $post2->authorid = 2;
+        $post2->save();
+
+        // Try to refresh
+        $status = $post->refresh();
+
+        $this->assertEquals('Test OK', $post->content);
+        $this->assertEquals(2, $post->author->id);
+        $this->assertEquals(2, $post->authorid);
+        $this->assertTrue($status);
+
+
+        // Try to refresh a deleted item
+        $status = $post2->delete();
+        $this->assertTrue($status);
+
+        $status = $post->refresh();
+        $this->assertFalse($status);
+    }
+
 
 
 
