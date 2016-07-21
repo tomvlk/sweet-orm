@@ -299,6 +299,46 @@ class EntityManager
         }
     }
 
+    /**
+     * Refresh Entity contents from database.
+     *
+     * @param Entity $entity
+     *
+     * @return bool status of refresh.
+     */
+    public function refresh ($entity)
+    {
+        // Return if not saved and not in database.
+        if (! $entity->_saved) return false;
+        $structure = $this->getEntityStructure($entity);
+
+        // ID Data.
+        $idColumn = $structure->primaryColumn->name;
+        $idValue = $entity->_id;
+
+        if ($structure->primaryColumn->type === 'integer')
+            $idValue = intval($idValue);
+
+        // Clear Relationship Cache.
+        $entity::clearCache();
+
+        // Query for refreshing.
+        $query = new Query($entity);
+        $newEntity = $query->select()
+            ->where($idColumn, $idValue)
+            ->one();
+
+        // If no entity is found (when refreshing).
+        if (! $newEntity) return false;
+
+        // Map to the old instance
+        foreach ($structure->columns as $column) {
+            $entity->{$column->propertyName} = $newEntity->{$column->propertyName};
+        }
+
+        return true;
+    }
+
 
     /**
      * Delete entity from database

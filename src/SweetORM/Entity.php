@@ -75,6 +75,15 @@ abstract class Entity
     }
 
     /**
+     * Refresh from database.
+     * @return bool
+     */
+    public function refresh()
+    {
+        return EntityManager::getInstance()->refresh($this);
+    }
+
+    /**
      * Delete Entity
      * @return bool
      */
