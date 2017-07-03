@@ -1,5 +1,11 @@
 # SweetORM
-[![Build Status](https://travis-ci.org/tomvlk/sweet-orm.svg)](https://travis-ci.org/tomvlk/sweet-orm) [![Coverage Status](https://coveralls.io/repos/tomvlk/sweet-orm/badge.svg?branch=master&service=github)](https://coveralls.io/github/tomvlk/sweet-orm?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/grade/b90c424851234082a43a0c0c94de7922)](https://www.codacy.com/app/tomvalk/sweet-orm) [![Codacy Badge](https://api.codacy.com/project/badge/coverage/b90c424851234082a43a0c0c94de7922)](https://www.codacy.com/app/tomvalk/sweet-orm) [![Latest Stable Version](https://poser.pugx.org/tomvlk/sweet-orm/v/stable)](https://packagist.org/packages/tomvlk/sweet-orm) [![Latest Unstable Version](https://poser.pugx.org/tomvlk/sweet-orm/v/unstable)](https://packagist.org/packages/tomvlk/sweet-orm) [![License](https://poser.pugx.org/tomvlk/sweet-orm/license)](https://packagist.org/packages/tomvlk/sweet-orm) [![Build Time](https://buildtimetrend.herokuapp.com/badge/tomvlk/sweet-orm)](https://buildtimetrend.herokuapp.com/dashboard/tomvlk/sweet-orm)
+[![Build Status](https://travis-ci.org/tomvlk/sweet-orm.svg)](https://travis-ci.org/tomvlk/sweet-orm)
+[![Coverage Status](https://coveralls.io/repos/tomvlk/sweet-orm/badge.svg?branch=master&service=github)](https://coveralls.io/github/tomvlk/sweet-orm?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/b90c424851234082a43a0c0c94de7922)](https://www.codacy.com/app/tomvalk/sweet-orm)
+[![Codacy Badge](https://api.codacy.com/project/badge/coverage/b90c424851234082a43a0c0c94de7922)](https://www.codacy.com/app/tomvalk/sweet-orm)
+[![Latest Stable Version](https://poser.pugx.org/tomvlk/sweet-orm/v/stable)](https://packagist.org/packages/tomvlk/sweet-orm)
+[![Latest Unstable Version](https://poser.pugx.org/tomvlk/sweet-orm/v/unstable)](https://packagist.org/packages/tomvlk/sweet-orm)
+[![License](https://poser.pugx.org/tomvlk/sweet-orm/license)](https://packagist.org/packages/tomvlk/sweet-orm)
 
 Simple and PHP orm, without having to use command line generators and migrators, can work on your existing table structure.
 
