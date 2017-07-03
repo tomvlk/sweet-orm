@@ -51,6 +51,8 @@ class Configuration
 
     /**
      * Register annotations when not yet done.
+     *
+     * @codeCoverageIgnore
      */
     public static function registerAnnotations ()
     {
@@ -75,6 +77,7 @@ class Configuration
 
     /**
      * Add configuration subvalue to a array value already existing.
+     *
      * @param string $key
      * @param mixed|array $value One value only.
      * @return bool successful or not
