@@ -8,6 +8,7 @@
 
 namespace SweetORM\Tests;
 
+use PHPUnit\Framework\TestCase;
 use SweetORM\ConnectionManager;
 use SweetORM\Exception\ORMException;
 use SweetORM\Exception\QueryException;
@@ -20,7 +21,7 @@ use SweetORM\Tests\Models\Post;
 use SweetORM\Tests\Models\PostChange;
 use SweetORM\Tests\Models\Student;
 
-class EntityTest extends \PHPUnit_Framework_TestCase
+class EntityTest extends TestCase
 {
     public function setUp()
     {

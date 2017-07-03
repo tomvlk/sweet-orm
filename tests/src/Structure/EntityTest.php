@@ -8,6 +8,7 @@
 
 namespace SweetORM\Tests\Structure;
 
+use PHPUnit\Framework\TestCase;
 use SweetORM\EntityManager;
 use SweetORM\Structure\Indexer\EntityIndexer;
 use \SweetORM\Tests\Models\Post;
@@ -19,7 +20,7 @@ use \SweetORM\Tests\Models\Category;
  *
  * @coversDefaultClass \SweetORM\Structure\Indexer\EntityIndexer
  */
-class EntityTest extends \PHPUnit_Framework_TestCase
+class EntityTest extends TestCase
 {
 
     /**

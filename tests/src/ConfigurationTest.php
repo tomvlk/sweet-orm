@@ -8,6 +8,7 @@
 
 namespace SweetORM\Tests;
 
+use PHPUnit\Framework\TestCase;
 use SweetORM\Configuration as Config;
 
 /**
@@ -16,7 +17,7 @@ use SweetORM\Configuration as Config;
  *
  * @coversDefaultClass \SweetORM\Configuration
  */
-class ConfigurationTest extends \PHPUnit_Framework_TestCase
+class ConfigurationTest extends TestCase
 {
 
     /**

@@ -8,11 +8,11 @@
 
 namespace SweetORM\Tests\Structure;
 
+use PHPUnit\Framework\TestCase;
 use SweetORM\EntityManager;
 use SweetORM\Structure\Validator\ValidationResult;
 use SweetORM\Tests\Models\ConstraintTest;
-use \SweetORM\Tests\Models\Post;
-use \SweetORM\Tests\Models\Category;
+use SweetORM\Tests\Models\Category;
 use SweetORM\Tests\Models\Student;
 use SweetORM\Tests\Models\TypeTest;
 
@@ -22,7 +22,7 @@ use SweetORM\Tests\Models\TypeTest;
  *
  * @coversDefaultClass \SweetORM\Structure\Validator\Validator
  */
-class ValidationTest extends \PHPUnit_Framework_TestCase
+class ValidationTest extends TestCase
 {
 
     /**

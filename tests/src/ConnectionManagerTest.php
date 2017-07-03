@@ -8,6 +8,7 @@
 
 namespace SweetORM\Tests;
 
+use PHPUnit\Framework\TestCase;
 use SweetORM\Configuration;
 use SweetORM\ConnectionManager;
 
@@ -17,7 +18,7 @@ use SweetORM\ConnectionManager;
  *
  * @coversDefaultClass \SweetORM\ConnectionManager
  */
-class ConnectionManagerTest extends \PHPUnit_Framework_TestCase
+class ConnectionManagerTest extends TestCase
 {
     public function setUp()
     {
