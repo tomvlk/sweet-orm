@@ -89,7 +89,7 @@ class Column implements BaseAnnotation
 
         if (strstr($this->default, '{{') && strstr($this->default, '}}')) {
             // Parse special replacements (if we have one)
-            $default = str_replace("{{CURRENT_TIME}}", date('c', time()), $default);
+            $default = str_replace("{{CURRENT_TIME}}", date('Y-m-d H:i:s', time()), $default);
         }
 
         return $default;

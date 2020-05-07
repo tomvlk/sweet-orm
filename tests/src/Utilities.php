@@ -60,59 +60,59 @@ class Utilities {
 
         // Fill the test data
         $category = array(
-            array('id' => '1','name' => 'News','description' => 'Site news.'),
-            array('id' => '2','name' => 'Press','description' => 'Press news'),
-            array('id' => '3','name' => 'FAQ','description' => 'FAQ Posts'),
-            array('id' => '4','name' => 'Downloads','description' => 'Download Posts')
+            array('id' => 1,'name' => 'News','description' => 'Site news.'),
+            array('id' => 2,'name' => 'Press','description' => 'Press news'),
+            array('id' => 3,'name' => 'FAQ','description' => 'FAQ Posts'),
+            array('id' => 4,'name' => 'Downloads','description' => 'Download Posts')
         );
 
         $authors = array(
-            array('id' => '1', 'name' => 'First Author', 'email' => null),
-            array('id' => '2', 'name' => 'Jan the Author', 'email' => 'jan.author@example.com'),
-            array('id' => '3', 'name' => 'Eric Authorinus', 'email' => 'ericauth@example.com')
+            array('id' => 1, 'name' => 'First Author', 'email' => null),
+            array('id' => 2, 'name' => 'Jan the Author', 'email' => 'jan.author@example.com'),
+            array('id' => 3, 'name' => 'Eric Authorinus', 'email' => 'ericauth@example.com')
         );
 
         $posts = array(
-            array('id' => '1', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #1', 'content' => 'Sample News 1'),
-            array('id' => '2', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #2', 'content' => 'Sample News 2'),
-            array('id' => '3', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #3', 'content' => 'Sample News 3'),
-            array('id' => '4', 'authorid' => '1', 'categoryid' => '1', 'title' => 'Sample News #4', 'content' => 'Sample News 4'),
-            array('id' => '5', 'authorid' => '2', 'categoryid' => '2', 'title' => 'Sample Press #1', 'content' => 'Sample Press 1'),
-            array('id' => '6', 'authorid' => '2', 'categoryid' => '2', 'title' => 'Sample Press #2', 'content' => 'Sample Press 2'),
-            array('id' => '7', 'authorid' => '2', 'categoryid' => '3', 'title' => 'Sample FAQ #1', 'content' => 'Sample FAQ 1'),
-            array('id' => '8', 'authorid' => '3', 'categoryid' => '3', 'title' => 'Sample FAQ #2', 'content' => 'Sample FAQ 2'),
-            array('id' => '9', 'authorid' => '3', 'categoryid' => '4', 'title' => 'Sample Downloads #1', 'content' => 'Sample Downloads 1'),
-            array('id' => '10', 'authorid' => '3', 'categoryid' => '4', 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
+            array('id' => 1, 'authorid' => 1, 'categoryid' => 1, 'title' => 'Sample News #1', 'content' => 'Sample News 1'),
+            array('id' => 2, 'authorid' => 1, 'categoryid' => 1, 'title' => 'Sample News #2', 'content' => 'Sample News 2'),
+            array('id' => 3, 'authorid' => 1, 'categoryid' => 1, 'title' => 'Sample News #3', 'content' => 'Sample News 3'),
+            array('id' => 4, 'authorid' => 1, 'categoryid' => 1, 'title' => 'Sample News #4', 'content' => 'Sample News 4'),
+            array('id' => 5, 'authorid' => 2, 'categoryid' => 2, 'title' => 'Sample Press #1', 'content' => 'Sample Press 1'),
+            array('id' => 6, 'authorid' => 2, 'categoryid' => 2, 'title' => 'Sample Press #2', 'content' => 'Sample Press 2'),
+            array('id' => 7, 'authorid' => 2, 'categoryid' => 3, 'title' => 'Sample FAQ #1', 'content' => 'Sample FAQ 1'),
+            array('id' => 8, 'authorid' => 3, 'categoryid' => 3, 'title' => 'Sample FAQ #2', 'content' => 'Sample FAQ 2'),
+            array('id' => 9, 'authorid' => 3, 'categoryid' => 4, 'title' => 'Sample Downloads #1', 'content' => 'Sample Downloads 1'),
+            array('id' => 10, 'authorid' => 3, 'categoryid' => 4, 'title' => 'Sample News #2', 'content' => 'Sample Downloads 2')
         );
 
         $postchanges = array(
-            array('id' => '1', 'postid' => '1', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '2', 'postid' => '1', 'authorid' => '2', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '3', 'postid' => '1', 'authorid' => '2', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '4', 'postid' => '2', 'authorid' => '2', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '5', 'postid' => '2', 'authorid' => '3', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '6', 'postid' => '2', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '7', 'postid' => '3', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '8', 'postid' => '4', 'authorid' => '1', 'created' => date('c', strtotime('17-01-2016 00:00'))),
-            array('id' => '9', 'postid' => '4', 'authorid' => '3', 'created' => date('c', strtotime('17-01-2016 00:00'))),
+            array('id' => 1, 'postid' => 1, 'authorid' => 1, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 2, 'postid' => 1, 'authorid' => 2, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 3, 'postid' => 1, 'authorid' => 2, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 4, 'postid' => 2, 'authorid' => 2, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 5, 'postid' => 2, 'authorid' => 3, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 6, 'postid' => 2, 'authorid' => 1, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 7, 'postid' => 3, 'authorid' => 1, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 8, 'postid' => 4, 'authorid' => 1, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
+            array('id' => 9, 'postid' => 4, 'authorid' => 3, 'created' => date('Y-m-d H:i:s', strtotime('17-01-2016 00:00'))),
         );
 
         $courses = array(
-            array('id' => '1', 'name' => 'Course #1', 'description' => null),
-            array('id' => '2', 'name' => 'Course #2', 'description' => 'Optional Description')
+            array('id' => 1, 'name' => 'Course #1', 'description' => null),
+            array('id' => 2, 'name' => 'Course #2', 'description' => 'Optional Description')
         );
 
         $students = array(
-            array('id' => '1', 'name' => 'Student #1'),
-            array('id' => '2', 'name' => 'Student #2'),
-            array('id' => '3', 'name' => 'Student #3'),
-            array('id' => '4', 'name' => 'Student #4'),
-            array('id' => '5', 'name' => 'Student #5'),
-            array('id' => '6', 'name' => 'Student #6'),
-            array('id' => '7', 'name' => 'Student #7'),
-            array('id' => '8', 'name' => 'Student #8'),
-            array('id' => '9', 'name' => 'Student #9'),
-            array('id' => '10', 'name' => 'Student #10')
+            array('id' => 1, 'name' => 'Student #1'),
+            array('id' => 2, 'name' => 'Student #2'),
+            array('id' => 3, 'name' => 'Student #3'),
+            array('id' => 4, 'name' => 'Student #4'),
+            array('id' => 5, 'name' => 'Student #5'),
+            array('id' => 6, 'name' => 'Student #6'),
+            array('id' => 7, 'name' => 'Student #7'),
+            array('id' => 8, 'name' => 'Student #8'),
+            array('id' => 9, 'name' => 'Student #9'),
+            array('id' => 10, 'name' => 'Student #10')
         );
 
 

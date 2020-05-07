@@ -25,7 +25,6 @@ class EntityTest extends TestCase
 
     /**
      * @covers \SweetORM\Structure\Indexer\EntityIndexer
-     * @covers \SweetORM\Structure\Indexer\Indexer
      * @covers \SweetORM\Structure\Indexer\TableIndexer
      * @covers \SweetORM\Structure\Indexer\ColumnIndexer
      * @covers \SweetORM\Structure\Indexer\RelationIndexer
